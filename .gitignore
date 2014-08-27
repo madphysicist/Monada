@@ -38,7 +38,6 @@
 
 build/
 dist/
-lib/
 
 config/local.properties
 
