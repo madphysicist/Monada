@@ -66,33 +66,33 @@
 
     <target name="compile" depends="compile-init"
             description="compiles the suite source code into class files">
-        <mkdir dir="${classes.dir}" />
+        <mkdir dir="${main.classes.dir}" />
         <javac classpathref="compile-lib"
-               srcdir="${src.dir}"
-               destdir="${classes.dir}"
+               srcdir="${main.src.dir}"
+               destdir="${main.classes.dir}"
                excludes="**/package-info.java"
                includeantruntime="false"
                debug="${DEBUG}">
             <compilerarg value="-Xlint:all" />
         </javac>
-        <copy todir="${classes.dir}">
-            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        <copy todir="${main.classes.dir}">
+            <fileset dir="${main.src.dir}" excludes="**/*.java"/>
         </copy>
     </target>
 
     <target name="clean-compile"
             description="removes all compiled suite classes">
-        <delete dir="${classes.dir}" />
+        <delete dir="${main.classes.dir}" />
     </target>
 
     <target name="jar" depends="compile"
             description="bundles the compiled suite classes into a jar file">
         <mkdir dir="${jar.dir}" />
         <jar destfile="${jar.file}"
-             basedir="${classes.dir}"
+             basedir="${main.classes.dir}"
              excludes="">
             <manifest>
-                <attribute name="Main-Class" value="${main.cli.class}" />
+                <attribute name="Main-Class" value="${run.cli.class}" />
             </manifest>
         </jar>
     </target>
@@ -104,9 +104,9 @@
 
     <target name="doc" depends="compile"
             description="creates javadoc documentation of the suite classes">
-        <mkdir dir="${doc.dir}" />
-        <javadoc sourcepath="${src.dir}"
-                 destdir="${doc.dir}"
+        <mkdir dir="${main.doc.dir}" />
+        <javadoc sourcepath="${main.src.dir}"
+                 destdir="${main.doc.dir}"
                  access="private"
                  encoding="UTF-8"
                  version="true"
@@ -123,20 +123,20 @@
             <!-- TODO: Include stable link to JTools javadocs /-->
             <classpath>
                 <path refid="compile-lib" />
-                <path location="${classes.dir}" />
+                <path location="${main.classes.dir}" />
             </classpath>
         </javadoc>
     </target>
 
     <target name="clean-doc"
             description="removes javadoc documentation of the the suite classes">
-        <delete dir="${doc.dir}" />
+        <delete dir="${main.doc.dir}" />
     </target>
 
     <target name="doc-jar" depends="doc"
             description="packages the suite javadoc into a jar file">
         <jar destfile="${doc.jar}"
-             basedir="${doc.dir}"
+             basedir="${main.doc.dir}"
              excludes="" />
     </target>
 
@@ -148,7 +148,7 @@
     <target name="src-jar"
             description="packages the suite source code into a jar file">
         <jar destfile="${src.jar}"
-             basedir="${src.dir}"
+             basedir="${main.src.dir}"
              excludes="" />
     </target>
 
@@ -161,7 +161,7 @@
 
     <target name="run-cli" depends="jar"
             description="runs the CLI parser application">
-        <java fork="true" classname="${main.cli.class}">
+        <java fork="true" classname="${run.cli.class}">
             <classpath>
                 <path refid="compile-lib" />
                 <path location="${jar.file}" />
