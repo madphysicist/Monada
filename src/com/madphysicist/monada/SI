@@ -1,0 +1,245 @@
+##
+## SI
+##
+## Mad Physicist Monada Project
+##
+## The MIT License (MIT)
+##
+## Copyright (c) 2014 by Joseph Fox-Rabinovitz
+##
+## Permission is hereby granted, free of charge, to any person obtaining a copy
+## of this software and associated documentation files (the "Software"), to deal
+## in the Software without restriction, including without limitation the rights
+## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+## copies of the Software, and to permit persons to whom the Software is
+## furnished to do so, subject to the following conditions:
+##
+## The above copyright notice and this permission notice shall be included in
+## all copies or substantial portions of the Software.
+##
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+## THE SOFTWARE.
+##
+
+##
+## A definition for the default preloaded measurement system, based on SI units,
+## but not restricted to them.
+##
+## Author:  Joseph Fox-Rabinovitz
+## Version: 1.0.0, 14 Jul 2014 - J. Fox-Rabinovitz - Created.
+## Since:   1.0.0
+##
+
+[Prefixes]
+# Prefix    Symbol  Base^Exponent
+
+# Standard prefixes
+hella	H	19^27 # Not strictly SI
+yotta	Y	10^24
+zetta	Z	10^21
+exa 	E	10^18
+peta	P	10^15
+tera	T	10^12
+giga	G	10^9
+mega	M	10^6
+myria		10^5 # Not strictly SI
+kilo	k	10^3
+hecto	h	10^2
+deca	da	10^1
+double		2^1 # Not strictly SI
+demi		2^-1 # Not strictly SI
+deci	d	10^−1
+centi	c	10^−2
+milli	m	10^−3
+myrio		10^-5 # Not strictly SI
+micro	µ	10^−6
+nano	n	10^−9
+pico	p	10^−12
+femto	f	10^−15
+atto	a	10^−18
+zepto	z	10^−21
+yocto	y	10^−24
+
+# Binary prefixes
+kibi	Ki	2^10 # Not strictly SI
+mebi	Mi	2^20 # Not strictly SI
+gibi	Gi	2^30 # Not strictly SI
+tebi	Ti	2^40 # Not strictly SI
+pebi	Pi	2^50 # Not strictly SI
+exbi	Ei	2^60 # Not strictly SI
+zebi	Zi	2^70 # Not strictly SI
+yobi	Yi	2^80 # Not strictly SI
+
+[Dimensions/Base]
+# Name	Description	Null
+
+Length	Spatial dimension	N
+Time	Fourth dimension	N
+Mass	Mass	N
+Current	Electrical current	N
+Temperature	Thermodynamic temperature	N
+Luminous Intensity	Luminous intensity	N
+Amount	Count	Y
+Logarithm Difference	Logarithm difference	Y # Not strictly SI
+Angle	Angle	Y # Not strictly SI
+Solid angle	Solid angle	Y # Not strictly SI
+Memory	Binary memory	N # Not strictly SI
+
+[Dimensions/Derived]
+# Name	Description	Components
+
+Wave Number	Inverse length	Length^-1
+Frequency	Inverse time	Time^-1
+Area	Surface area	Length^2
+Volume	Spatial volume	Length^3
+Concentration	Inverse volume	Volume^-1
+Substance Concentration	Amount per volume	Amount * Concentration
+Molar Volume	Volume per unit amount	Volume / Amount
+Velocity	Change in position over time	Length / Time
+Angular Velocity	Change in angle over time	Angle / Time
+Acceleration	Change in velocity over time	Velocity / Time
+Angular Acceleration	Change in angular velocity over time	Angular Velocity / Time
+Jerk	Jolt	Change in acceleration over time	Acceleration / Time
+Snap	Jounce	Change in jerk over time	Jerk / Time
+Volume Flow	Volume over time	Volume / Time
+Moment of Inertia	Angular mass	Mass / Length^2
+Area Density	Mass per area	Mass / Area
+Mass Density	Mass per volume	Mass / Volume
+Specific Volume	Volume per unit mass	Volume / Mass
+Momentum	Impulse, A conserved quantity	Mass * Velocity
+Angular Momentum	 A conserved quantity	Moment of Inertia * Angular Velocity
+Force	Change in linear over time, Weight	Momentum / Time
+Torque	Change in angular momentum over time, Moment of force	Angular Momentum / Time
+Yank	Change in force over time	Force / Time
+Pressure	Force per area	Force / Area
+Energy	Force-length, Work	Force * Length
+Action	Energy-time	Energy * Time
+Power	Energy over time	Energy / Time
+Entropy	Heat capacity	Energy / Temperature
+Molar Entropy	Molar heat capacity	Energy / Temperature / Amount
+Specific Entropy	Specific heat capacity	Energy / Temperature / Mass
+Molar Energy	Energy per amount	Energy / Amount
+Specific Energy	Energy per mass	Energy / Mass
+Energy Density	Energy per volume	Energy / Volume
+Surface Tension	Stiffness, Force per distance, Energy per area	Energy / Area
+Irradiance	Heat flux density	Power / Area
+Thermal Conductivity	Thermal conductivity	Power / Length / Temperature
+Kinematic Viscosity	Diffusion coefficient	Area / Time
+Dynamic Viscosity	Dynamic viscosity	Pressure * Time
+Charge	Electrical charge	Current * Time
+Electric Potential	Voltage, Electrical potential difference, Electromotive force	Power / Current
+Electric Field Strength	Electric Field Strength	Electric Potential / Length
+Capacitance	Electrical capacitance	Charge / Electrical Potential
+Resistance	Electrical resistance, Impredance, Reactance	Electrical Potential / Current
+Conductance	Electrical conductance	Resistance^-1
+Resistivity	Resistivity	Resistance * Length
+Electric Displacement Field	Polarization vector	Charge / Area
+Charge Density	Electric charge density	Charge / Volume
+Current Density	Electric current density	Current / Area
+Conductivity	Electric conductivity	Conductance / Length
+Molar Conductivity Molar conductivity	Conductance * Area / Amount
+Magnetic Flux	Magnetic flux	Energy / Current
+Magnetic Field	Magnetic field, Magnetic flux density	Magnetic Flux / Area
+Magnetic Field Strength	Magnetic field strength	Current / Length
+Inductance	Inductance	Resistance * Time
+Permittivity	Electromagnetic permittivity	Capacitance / Length
+Permeability	Electromagnetic permeability	Inductance / Length
+Luminance	Luminance	Luminous Intensity / Area
+Luminous Flux	Luminous flux	Luminous Intensity * Solid Angle
+Illuminance	Illuminance	Luminous Flux / Area
+Radiant Intensity	Radiant intensity	Power / Solid Angle
+Luminous Energy	Luminous energy	Luminous Flux * Time
+Luminous Exposure	Luminous exposure	Illuminance * Time
+Exposure	Radiation exposure	Charge / Mass
+Radiation Dose	Ionizing radiation dose	Energy / Mass
+Absorbed Dose	Absorbed dose of radiation	Radiation Dose
+Equivalent Dose	Equivalent dose of radiation	Radiation Dose
+Absorbed Dose Rate	Rate of radiation absorption	Absorbed Dose / Time
+Catalytic Activity	Catalytic activity	Amount / Time
+Bandwidth	Memory over time	Memory / Time # Not strictly SI
+
+[Units]
+# Name	Abbreviation	Factor	Dimensions
+metre	m	1	Length
+litre	L	1	Volume
+gram	g	1e-3	Mass # Not the base SI unit, but required for prefixes to apply
+second	s	1	Time
+minute	min	60	Time
+hour	h	3600	Time
+day	d	86400	Time
+ampere	A	1	Current
+kelvin	K	1	Temperature
+degree Rankine	°R	5.5555555555555555556e-1	Temperature
+mole	mol	1	Amount
+candela	cd	1	Luminous Intensity
+square metre	m²	1	Area
+cubic metre	m³	1	Volume
+herz	Hz	1	Frequency
+radian	rad	1	Angle
+degree	°	1.7453292519943295769e-2	Angle # τ/360
+grad	ᵍ	1.5707963267948966192e-2	Angle # τ/400
+turn	τ	6.2831853071795864769	Angle # τ
+quadrant	ᴸ	1.5707963267948966192	Angle # τ/4
+sextant		1.0471975511965977461	Angle # τ/6
+octant		7.8539816339744830962e-1	Angle # τ/8
+hour angle	ʰ	2.6179938779914943654e-1	Angle # τ/12
+point		1.9634954084936207740e-1	Angle # τ/32
+hexacontade		1.0471975511965977462e-1	Angle # τ/60
+pechus		3.4906585039886591538e-2	Angle # τ/180
+binary radian	brad	2.4543692606170259675e-2	Angle # τ/256
+diameter part		1.6666666666666666667e-2	Angle # rad/60
+arcminute	′	2.9088820866572159615e-4	Angle # °/60
+arcsecond	″	4.8481368110953599359e-6	Angle # ′/60
+milliarcsecond	mas	4.8481368110953599359e-9	Angle # ′/60,000
+microarcsecond	μas	4.8481368110953599359e-12	Angle # ′/60,000,000
+revolutions per minute	rpm	1.0471975511965977462e-1	Angular Velocity
+steradian	sr	1	Solid Angle
+newton	N	1	Force
+pascal	Pa	1	Pressure
+joule	J	1	Energy
+watt	W	1	Power
+coulomb	C	1	Charge
+volt	V	1	Electric Potential
+farad	F	1	Capacitance
+ohm	Ω	1	Resistance
+siemens	S	1	Conductance
+weber	Wb	1	Magnetic Flux
+tesla	T	1	Magnetic Field
+henry	H	1	Inductance
+
+[Units/Alias]
+# Alias	Symbol	Original Name
+meter	m	metre
+liter	L	litre
+gon	ᵍ	grad
+grad	ᵍ	grad
+grade	ᵍ	grad
+gradian	ᵍ	grad
+cycle	cyc	turn
+revolution	rev	turn
+rotation	rot	turn
+binary degree		binary radian
+MOA	′	arcminute
+minute of arc	′	arcminute
+minute arc	′	arcminute
+second of arc	″	arcsecond
+degree kelvin	K	kelvin
+rankine	°R	degree rankine
+degree rankine	°Ra	degree rankine
+
+# [Units/Offset]
+# Name	Symbol	Parent	Scale	Offset
+degree Celsius	°C	kelvin	1	273.15
+degree Fahrenheit	°F	degree Rankine	1	459.67
+newton degree	°N	degree celsius	3.0303030303030303030	0
+
+[Units/Alias]
+# Alias	Symbol	Original Name
+celsius	°C	degree Celsius
+fahrenheit	°F	degree Fahrenheit
+rankine	°R	degree rankine
