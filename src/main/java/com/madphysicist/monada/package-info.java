@@ -1,7 +1,7 @@
 /*
  * package-info.java (Package: com.madphysicist.monada)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -28,7 +28,7 @@
 
 /**
  * The purpose of this package is to create a framework for unit conversions. The main classes of this package are
- * {@link com.madphysicist.monada.MeasurementSystem} and {@link com.madphysicist.monada.Arithmetic}.
+ * {@link com.madphysicist.monada.temp.MeasurementSystem} and {@link com.madphysicist.monada.Arithmetic}.
  * {@code MeasurementSystem} maintains a self-consistent database of dimensions and units. It allows for lookup of units
  * according to their dimension, name and other attributes. {@code Arithmetic} contains methods for performing unit
  * conversions as well as common operations on both scalar and vector quantities.

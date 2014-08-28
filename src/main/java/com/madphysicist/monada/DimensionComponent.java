@@ -1,7 +1,7 @@
 /*
  * DimensionComponent.java (Class: com.madphysicist.monada.DimensionComponent)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -47,9 +47,7 @@ import com.madphysicist.tools.util.ReferenceIterator;
  * </p>
  * <p>
  * Dimension components are comparable, first by exponent (descending), then by the name and description of the
- * underlying base dimension. Note that the default comparison is not consistent with equals since two components are
- * equal when they have the same exponent and dimension, but dimensions with the same name and description may still be
- * unequal.
+ * underlying base dimension.
  * </p>
  * <p>
  * This class is immutable.
@@ -168,9 +166,7 @@ public class DimensionComponent implements Serializable, Comparable<DimensionCom
     }
 
     /**
-     * Compares this component to another one, first by the exponent (descending), then by the name of the underlying
-     * dimension. This comparison is not necessarily consistent with equals since the {@code compareTo()} and {@code
-     * equals()} methods of the underlying dimensions are not consistent.
+     * Compares this component to another one, first by the exponent (descending), then by the underlying dimension.
      *
      * @since 1.0.0
      */
@@ -180,7 +176,7 @@ public class DimensionComponent implements Serializable, Comparable<DimensionCom
             return -1;
         if(this.exponent < o.exponent)
             return 1;
-        return this.dimension.name().compareTo(o.dimension.name());
+        return this.dimension.compareTo(o.dimension);
     }
 
     /**
@@ -200,12 +196,10 @@ public class DimensionComponent implements Serializable, Comparable<DimensionCom
     }
 
     /**
-     * Returns an iterator over this object. The iterator has only one element, which is a reference to this object.
-     * This method is provided so that {@code DimensionComponent}s and {@code Dimension}s can both be used to create new
-     * dimensions.
+     * {@inheritDoc}
+     * The iterator has only one element, which is a reference to this object.
      *
-     * @see DerivedDimension#DerivedDimension(String, java.util.Collection)
-     * @see DerivedDimension#DerivedDimension(String, String, java.util.Collection)
+     * @return {@inheritDoc}
      * @since 1.0.0
      */
     @Override public Iterator<DimensionComponent> iterator()

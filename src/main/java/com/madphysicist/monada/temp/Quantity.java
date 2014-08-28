@@ -1,7 +1,7 @@
 /*
- * IncompatibleUnitsException.java (Class: com.madphysicist.monada.IncompatibleUnitsException)
+ * Quantity.java (Class: com.madphysicist.monada.Quantity)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -25,17 +25,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.madphysicist.monada;
+package com.madphysicist.monada.temp;
+
+import java.io.Serializable;
 
 /**
- * Used to inform the caller that the units in an {@link Arithmetic} operation are not compatible with the current set
- * of rules.
+ * <p>
+ * A number with units. This class encapsulates a scalar quantity with units.
+ * </p>
+ * <p>
+ * This class is immutable.
+ * </p>
  *
- * @author Joseph Fox-Rabinovitz
- * @version 1.0.0, 04 Aug 2014 - J. Fox-Rabinovitz - Initial coding
+ * @version 1.0.0, 16 Jul 2014 - J. Fox-Rabinovitz - Initial coding
  * @since 1.0
  */
-public class IncompatibleUnitsException extends Exception
+public class Quantity implements Serializable
 {
     /**
      * The version ID for serialization.
@@ -49,5 +54,35 @@ public class IncompatibleUnitsException extends Exception
      */
     private static final long serialVersionUID = 1000L;
 
-    
+    /**
+     * The value of the scalar.
+     *
+     * @serial
+     * @since 1.0.0
+     */
+    private final double value;
+
+    /**
+     * The units of this quantity. The same units apply to every numerical value in the quantity.
+     *
+     * @serial
+     * @since 1.0.0
+     */
+    private final Units units;
+
+    public Quantity(double value, Units units)
+    {
+        this.value = value;
+        this.units = units;
+    }
+
+    public double value()
+    {
+        return value;
+    }
+
+    public Units units()
+    {
+        return units;
+    }
 }

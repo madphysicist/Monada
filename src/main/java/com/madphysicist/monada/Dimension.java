@@ -1,7 +1,7 @@
 /*
  * Dimension.java (Class: com.madphysicist.monada.Dimension)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -32,6 +32,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.madphysicist.monada.temp.MeasurementSystem;
+import com.madphysicist.tools.util.HashUtilities;
+
 /**
  * <p>
  * Defines a dimension. Dimensions may be base or derived. Base dimensions are orthogonal to all other base dimensions
@@ -46,13 +49,11 @@ import java.util.Map;
  * </p>
  * <p>
  * It is best to use this class through a {@link MeasurementSystem}, since it is intended to be treated as an enum
- * within a given {@code MeasurementSystem}. To this effect, it does not override {@code hashCode()} or {@code equals()}
- * from the default implementation. This way, two dimensions are equal if and only if they point to the same object, not
- * just if they have the same name and components.
+ * within a given {@code MeasurementSystem}.
  * </p>
  * <p>
- * Dimensions are comparable by name their components, name and description. The comparison is not consistent with
- * equals since two different dimension references with the same components, name and description will not be equal.
+ * Dimensions are comparable by name their components, name and description. The comparison is consistent with
+ * equals. Extending classes should preserve this property.
  * </p>
  * <p>
  * This class is immutable, and extending classes should preserve its immutability.
@@ -148,55 +149,6 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
     }
 
     /**
-     * Compares this dimension to another one by its components, then by name and by description. This comparison is not
-     * consistent with {@code equals()}.
-     *
-     * @since 1.0.0
-     */
-    @Override public int compareTo(Dimension o)
-    {
-        // Compare components
-        int comp = compareComponents(o);
-        if(comp != 0)
-            return comp;
-
-        // If components truly identical, compare by name
-        comp = this.name().compareTo(o.name());
-        if(comp != 0)
-            return comp;
-
-        // If components and name are equal, compare by description
-        return this.description().compareTo(o.description());
-    }
-
-    /**
-     * Returns a string representation of this dimension. This method recognizes instances of the
-     * subclass {@code BaseDimension} to be a special type. All other subclasses are treated as
-     * sequences of {@code DimensionComponent}s.
-     *
-     * @since 1.0.0
-     */
-    @Override public String toString()
-    {
-        StringBuilder sb = new StringBuilder(name);
-        if(this instanceof BaseDimension) {
-            sb.append(": BaseDimension");
-        } else {
-            sb.append(" = ");
-            for(DimensionComponent component : this) {
-                sb.append(component.dimension().name());
-                float exponent = component.exponent();
-                if(exponent != 1.0f)
-                    sb.append('^').append(exponent);
-                sb.append(' ');
-            }
-        }
-        if(description != null)
-            sb.append(" (").append(description).append(")");
-        return sb.toString();
-    }
-
-    /**
      * Determines if this dimension has the same components as another dimension. Two dimensions are identical if they
      * contain the same {@code DimensionComponent}s. The name and description are irrelevant to this comparison. Note
      * that null base dimensions are not considered to be equal. This method relies on the respective iterators
@@ -239,6 +191,92 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
      * @since 1.0.0
      */
     @Override public abstract Iterator<DimensionComponent> iterator();
+
+    /**
+     * Compares this dimension to another one by its components, then by name and by description. This comparison is
+     * consistent with {@code equals()}.
+     *
+     * @param o {@inheritDoc}
+     * @return {@inheritDoc}
+     * @since 1.0.0
+     */
+    @Override public int compareTo(Dimension o)
+    {
+        // Compare components
+        int comp = compareComponents(o);
+        if(comp != 0)
+            return comp;
+
+        // If components truly identical, compare by name
+        comp = this.name().compareTo(o.name());
+        if(comp != 0)
+            return comp;
+
+        // If components and name are equal, compare by description
+        return this.description().compareTo(o.description());
+    }
+
+    /**
+     * Tests if two dimensions are equal. Equal dimensions have the same components, the same name, and the same
+     * description. This is consistent with the {@link #compareTo(Dimension)} method.
+     *
+     * @param o {@inheritDoc}
+     * @return {@inheritDoc}
+     * @since 1.0.0
+     */
+    @Override public boolean equals(Object o)
+    {
+        if(o != null && this.getClass() == o.getClass()) {
+            Dimension dim = (Dimension)o;
+            return compareComponents(dim) == 0 && this.name.equals(dim.name) && this.description.equals(dim.description);
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     * The hash code depends on the components, the name and description of this dimension.
+     *
+     * @since 1.0.0
+     */
+    @Override public int hashCode()
+    {
+        int hashCode = HashUtilities.hashCode(name);
+        hashCode = HashUtilities.hashCode(hashCode, description);
+
+        for(DimensionComponent component : this) {
+            hashCode = HashUtilities.hashCode(hashCode, component);
+        }
+
+        return hashCode;
+    }
+
+    /**
+     * Returns a string representation of this dimension. This method recognizes instances of the
+     * subclass {@code BaseDimension} to be a special type. All other subclasses are treated as
+     * sequences of {@code DimensionComponent}s.
+     *
+     * @since 1.0.0
+     */
+    @Override public String toString()
+    {
+        StringBuilder sb = new StringBuilder(name);
+        if(this instanceof BaseDimension) {
+            sb.append(": BaseDimension");
+        } else {
+            sb.append(" = ");
+            for(DimensionComponent component : this) {
+                sb.append(component.dimension().name());
+                float exponent = component.exponent();
+                if(exponent != 1.0f)
+                    sb.append('^').append(exponent);
+                sb.append(' ');
+            }
+        }
+        if(description != null)
+            sb.append(" (").append(description).append(")");
+        return sb.toString();
+    }
 
     /**
      * A utility method for combining the dimension components of various iterable entities such as Dimensions and

@@ -1,7 +1,7 @@
 /*
  * MeasurementSystem.java (Class: com.madphysicist.monada.MeasurementSystem)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -25,7 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.madphysicist.monada;
+package com.madphysicist.monada.temp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.madphysicist.monada.Dimension;
 import com.madphysicist.tools.io.FileParseException;
 
 /**

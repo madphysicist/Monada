@@ -1,7 +1,7 @@
 /*
  * DimensionComponentIterable.java (Interface: com.madphysicist.monada.DimensionComponentIterable)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -27,6 +27,8 @@
  */
 package com.madphysicist.monada;
 
+import java.util.Iterator;
+
 /**
  * <p>
  * An interface that extends {@code Iterable} over a fixed number of elements. The number of elements can be obtained
@@ -34,9 +36,7 @@ package com.madphysicist.monada;
  * </p>
  * </p>
  * <b>An aside to the developer: </b>Part of the reason for this interface is to avoid unchecked casts to arrays of
- * generic iterables when constructing @{code DerivedDimension}s and {@code Units}. This interface has public
- * visibility because all the classes that implement it are public, but it is not really intended to be used outside
- * the package. 
+ * generic iterables when constructing @{code DerivedDimension}s and {@code Units}.
  * </p>
  *
  * @author Joseph Fox-Rabinovitz
@@ -45,6 +45,15 @@ package com.madphysicist.monada;
  */
 public interface DimensionComponentIterable extends Iterable<DimensionComponent>
 {
+    /**
+     * Returns an iterator over the components in the iterable. This method has an additional restriction: the returned
+     * elements must be sorted according to the natural order of {@code DimensionComponent}.
+     *
+     * @return an iterator over the components of this object.
+     * @since 1.0.0
+     */
+    @Override public Iterator<DimensionComponent> iterator(); 
+
     /**
      * Returns the number of elements in the iterator. This number must be a constant by the contract of this interface.
      *

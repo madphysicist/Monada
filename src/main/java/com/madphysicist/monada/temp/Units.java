@@ -1,7 +1,7 @@
 /*
  * Units.java (Class: com.madphysicist.monada.Units)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -25,12 +25,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.madphysicist.monada;
+package com.madphysicist.monada.temp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import com.madphysicist.monada.BaseDimension;
+import com.madphysicist.monada.DerivedDimension;
+import com.madphysicist.monada.Dimension;
+import com.madphysicist.monada.DimensionComponent;
+import com.madphysicist.monada.DimensionComponentIterable;
 
 /**
  * <p>

@@ -1,7 +1,7 @@
 /*
  * BaseDimension.java (Class: com.madphysicist.monada.BaseDimension)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -34,10 +34,10 @@ import java.util.Iterator;
  * Defines a dimension orthogonal to all other dimensions in a given {@code MeasurementSystem} or other collection. A
  * base dimension can be used to construct derived dimensions via {@code DimensionComponent} objects. Base dimensions
  * can be considered "null" dimensions in certain cases. Null dimensions are conceptual placeholders that are
- * effectively unitless. An example is angle in the SI measurement system. Quantities along a null base dimension may be
- * treated as a scalar, but only after they have been converted to the base unit along that dimension. This way, a
- * function such as {@code sin(x)}, which expects a unitless scalar argument can be invoked with a quantity in degrees,
- * but only after it has been converted to radians (assuming SI units).
+ * effectively dimensionless/unitless. An example is angle in the SI measurement system. Quantities along a null base
+ * dimension may be treated as a scalar, but only after they have been converted to the base unit along that dimension.
+ * This way, a function such as {@code sin(x)}, which expects a unitless scalar argument can be invoked with a quantity
+ * in degrees, but only after it has been converted to radians (assuming SI units).
  * </p>
  * <p>
  * This class is intended to be treated as an enum within a given {@code MeasurementSystem}. To this effect, it does not
@@ -48,8 +48,6 @@ import java.util.Iterator;
  * This class is immutable.
  * </p>
  *
- * @see MeasurementSystem#addDimension(String)
- * @see MeasurementSystem#getDimension(String)
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 16 Jul 2014 - J. Fox-Rabinovitz - Initial coding
  * @since 1.0
@@ -174,6 +172,7 @@ public class BaseDimension extends Dimension
      * {@inheritDoc}
      * Base dimensions have only one component, by definition. 
      *
+     * @return always {@code 1}.
      * @since 1.0.0
      */
     @Override public int componentCount()

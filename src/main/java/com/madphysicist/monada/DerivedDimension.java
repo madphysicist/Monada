@@ -1,7 +1,7 @@
 /*
  * DerivedDimension.java (Class: com.madphysicist.monada.DerivedDimension)
  *
- * Mad Physicist Monada Project (Unit Conversion Suite)
+ * Mad Physicist Monada Project (Unit Conversion Library)
  *
  * The MIT License (MIT)
  *
@@ -36,17 +36,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.madphysicist.monada.temp.MeasurementSystem;
+
 /**
  * <p>
  * Defines a dimension that is a combination of base dimensions. A derived dimension is the product of base dimensions
  * raised to some power. The product is specified as a collection of {@code DimensionComponent} objects, each of which
  * encapsulates a base dimension and its exponent. Although this class can be instantiated directly, it is best to use
  * it through a {@link MeasurementSystem}.
- * </p>
- * <p>
- * This class is intended to be treated as an enum within a given {@code MeasurementSystem}. To this effect, it does not
- * override {@code hashCode()} or {@code equals()} from the default implementation. This way, two dimensions are equal
- * if and only if they point to the same object, not just if they have the same name and components.
  * </p>
  * <p>
  * This class is immutable.
@@ -136,7 +133,7 @@ public class DerivedDimension extends Dimension
      * @throws NullPointerException if either {@code name} or {@code components} are {@code null}.
      * @throws IllegalArgumentException if {@code components} does not contain a single iterator with an element.
      */
-    @SafeVarargs public DerivedDimension(String name, DimensionComponentIterable... components)
+    public DerivedDimension(String name, DimensionComponentIterable... components)
             throws NullPointerException, IllegalArgumentException
     {
         this(name, null, components);
@@ -157,7 +154,7 @@ public class DerivedDimension extends Dimension
      * @throws IllegalArgumentException if {@code components} does not contain a single iterator with an element.
      * @since 1.0.0
      */
-    @SafeVarargs public DerivedDimension(String name, String description, DimensionComponentIterable... components)
+    public DerivedDimension(String name, String description, DimensionComponentIterable... components)
             throws NullPointerException, IllegalArgumentException
     {
         this(name, description, Arrays.asList(components));
