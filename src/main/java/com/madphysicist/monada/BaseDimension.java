@@ -29,6 +29,8 @@ package com.madphysicist.monada;
 
 import java.util.Iterator;
 
+import com.madphysicist.tools.util.HashUtilities;
+
 /**
  * <p>
  * Defines a dimension orthogonal to all other dimensions in a given {@code MeasurementSystem} or other collection. A
@@ -169,6 +171,30 @@ public class BaseDimension extends Dimension
     }
 
     /**
+     * Compares this dimension to another by its base properties, then by its null status if the other dimension is also
+     * a {@code BaseDimension}. Null dimensions are smaller than non-null ones. This comparison is consistent with
+     * {@code equals()}.
+     *
+     * @param o {@inheritDoc}
+     * @return {@inheritDoc}
+     * @since 1.0.0
+     */
+    @Override public int compareTo(Dimension o)
+    {
+        // Compare base properties
+        int comp = super.compareTo(o);
+        if(comp != 0)
+            return comp;
+
+        // If base properties are the same, compare null status
+        boolean oIsNull = ((BaseDimension)o).isNull;
+        if(this.isNull == oIsNull)
+            return 0;
+        // null < non-null
+        return (this.isNull) ? -1 : 1;
+    }
+
+    /**
      * {@inheritDoc}
      * Base dimensions have only one component, by definition. 
      *
@@ -189,5 +215,52 @@ public class BaseDimension extends Dimension
     @Override public Iterator<DimensionComponent> iterator()
     {
         return component.iterator();
+    }
+
+    /**
+     * Checks if another object is equal to this one. Two objects are equal if they are of the same type and have the
+     * same base properties (see {@link Dimension#equals(Object)}, as well as the same null status. This method is
+     * consistent with both {@link #hashCode()} and {@link #compareTo(Dimension)}. 
+     * 
+     * @param o {@inheritDoc}
+     * @return {@inheritDoc}
+     * @see #isNull()
+     * @since 1.0.0
+     */
+    @Override public boolean equals(Object o) // true result guarantees that o is a BaseDimension
+    {
+        if(super.equals(o)) {
+            BaseDimension dim = (BaseDimension)o;
+            return this.isNull == dim.isNull;
+        }
+        return false;
+    }
+
+    /**
+     * Computes the hash code for this object. The hash code depends on the base properties (see {@link
+     * Dimension#hashCode()} as well as the null status. This method is consistent with {@link #equals(Object)}.
+     *
+     * @return {@inheritDoc}
+     * @see #isNull()
+     * @since 1.0.0
+     */
+    @Override public int hashCode()
+    {
+        return HashUtilities.hashCode(super.hashCode(), isNull);
+    }
+
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return {@inheritDoc}
+     * @since 1.0.0
+     */
+    @Override public String toString()
+    {
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("\n    Base Dimension");
+        if(isNull)
+            sb.append(" [Null]");
+        return sb.toString();
     }
 }

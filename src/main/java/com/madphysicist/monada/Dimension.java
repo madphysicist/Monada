@@ -149,10 +149,9 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
     }
 
     /**
-     * Determines if this dimension has the same components as another dimension. Two dimensions are identical if they
-     * contain the same {@code DimensionComponent}s. The name and description are irrelevant to this comparison. Note
-     * that null base dimensions are not considered to be equal. This method relies on the respective iterators
-     * returning elements in their natural order.
+     * Determines if this dimension has the same components as another dimension. The name and description are
+     * irrelevant to this comparison. Note that null base dimensions are not considered to be equal. This method relies
+     * on the respective iterators returning elements in their natural order, as required by contract.
      *
      * @param o the dimension to test for sameness with.
      * @return {@code 0} if this dimension is identical to the specified one, {@code false} otherwise.
@@ -193,8 +192,10 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
     @Override public abstract Iterator<DimensionComponent> iterator();
 
     /**
-     * Compares this dimension to another one by its components, then by name and by description. This comparison is
-     * consistent with {@code equals()}.
+     * Compares this dimension to another one by name and by description. by description and finally by class name. The
+     * class name comparison ensures that a dimension of a different type will not be equal to this one. This comparison
+     * is therefore consistent with {@code equals()}. This method should be overridden by extending classes to preserve
+     * its consistency with {@code equals()} by including comparisons of any relevant properties.
      *
      * @param o {@inheritDoc}
      * @return {@inheritDoc}
@@ -202,23 +203,27 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
      */
     @Override public int compareTo(Dimension o)
     {
-        // Compare components
-        int comp = compareComponents(o);
-        if(comp != 0)
-            return comp;
+        int comp;
 
-        // If components truly identical, compare by name
+        // Compare by name
         comp = this.name().compareTo(o.name());
         if(comp != 0)
             return comp;
 
-        // If components and name are equal, compare by description
-        return this.description().compareTo(o.description());
+        // If names are equal, compare by description
+        comp = this.description().compareTo(o.description());
+        if(comp != 0)
+            return comp;
+
+        // If name and description are equal, compare by class name
+        return this.getClass().getName().compareTo(o.getClass().getName());
     }
 
     /**
-     * Tests if two dimensions are equal. Equal dimensions have the same components, the same name, and the same
-     * description. This is consistent with the {@link #compareTo(Dimension)} method.
+     * Tests if two dimensions are equal. This method only compares the abstract base portion of this class. The name
+     * and description are compared. Extending classes should override this method to include any additional properties
+     * they define. Note that two dimensions can not be equal if they are not of the same class. This property should be
+     * preserved by the {@code #compareTo(Dimension)} method of any extending class.
      *
      * @param o {@inheritDoc}
      * @return {@inheritDoc}
@@ -228,51 +233,34 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
     {
         if(o != null && this.getClass() == o.getClass()) {
             Dimension dim = (Dimension)o;
-            return compareComponents(dim) == 0 && this.name.equals(dim.name) && this.description.equals(dim.description);
+            return this.name.equals(dim.name) && this.description.equals(dim.description);
         }
         return false;
     }
 
     /**
      * {@inheritDoc}
-     * The hash code depends on the components, the name and description of this dimension.
+     * This method only computes the hash code for this abstract base class. Extending classes should override this
+     * method to be consistent with equals. The hash code depends the name and description of this dimension.
      *
      * @since 1.0.0
      */
     @Override public int hashCode()
     {
         int hashCode = HashUtilities.hashCode(name);
-        hashCode = HashUtilities.hashCode(hashCode, description);
-
-        for(DimensionComponent component : this) {
-            hashCode = HashUtilities.hashCode(hashCode, component);
-        }
-
-        return hashCode;
+        return HashUtilities.hashCode(hashCode, description);
     }
 
     /**
-     * Returns a string representation of this dimension. This method recognizes instances of the
-     * subclass {@code BaseDimension} to be a special type. All other subclasses are treated as
-     * sequences of {@code DimensionComponent}s.
+     * Returns a string representation of this dimension. This string only displays the name and description, if it
+     * is not missing. Extending classes should override this method.
      *
+     * @return {@inheritDoc}
      * @since 1.0.0
      */
     @Override public String toString()
     {
         StringBuilder sb = new StringBuilder(name);
-        if(this instanceof BaseDimension) {
-            sb.append(": BaseDimension");
-        } else {
-            sb.append(" = ");
-            for(DimensionComponent component : this) {
-                sb.append(component.dimension().name());
-                float exponent = component.exponent();
-                if(exponent != 1.0f)
-                    sb.append('^').append(exponent);
-                sb.append(' ');
-            }
-        }
         if(description != null)
             sb.append(" (").append(description).append(")");
         return sb.toString();
