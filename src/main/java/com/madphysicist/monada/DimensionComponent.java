@@ -166,8 +166,11 @@ public class DimensionComponent implements Serializable, Comparable<DimensionCom
     }
 
     /**
-     * Compares this component to another one, first by the exponent (descending), then by the underlying dimension.
+     * Compares this component to another one, first by the exponent (descending), then by the underlying dimension
+     * (natural order).
      *
+     * @param o {@inheritDoc}
+     * @return {@inheritDoc}
      * @since 1.0.0
      */
     @Override public int compareTo(DimensionComponent o)
@@ -182,6 +185,7 @@ public class DimensionComponent implements Serializable, Comparable<DimensionCom
     /**
      * Returns a string representation of this component.
      *
+     * @return {@inheritDoc}
      * @since 1.0.0
      */
     @Override public String toString()
