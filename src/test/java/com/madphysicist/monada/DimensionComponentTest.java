@@ -213,10 +213,11 @@ public class DimensionComponentTest
      * Checks that the single-argument constructor fails when a {@code null} dimension is passed in. The expected
      * exception is a {@code NullPointerException}.
      *
+     * @throws NullPointerException as expected.
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void LinearConstructorNullTest()
+    public void LinearConstructorNullTest() throws NullPointerException
     {
         new DimensionComponent(null);
         Assert.fail();
@@ -240,10 +241,11 @@ public class DimensionComponentTest
      * Checks that the full (two-argument) constructor fails when a {@code null} dimension is passed in. The expected
      * exception is a {@code NullPointerException}.
      *
+     * @throws NullPointerException as expected.
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void FullConstructorNullTest()
+    public void FullConstructorNullTest() throws NullPointerException
     {
         new DimensionComponent(null, exponent);
         Assert.fail();
