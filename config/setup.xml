@@ -62,8 +62,7 @@
     <target name="compile-test-init" depends="compile-init">
         <path id="testng-jars">
             <pathelement location="${local.testng.jar}" />
-            <!--pathelement location="${local.qdox.jar}" /-->
-            <!--pathelement location="${local.bsh.jar}" /-->
+            <!--pathelement location="${local.jcommander.jar}" /-->
         </path>
         <path id="compile-test-lib">
             <path refid="compile-lib" />
