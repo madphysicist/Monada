@@ -216,6 +216,12 @@ public class DimensionTest
         throw new RuntimeException("Test not implemented");
     }
 
+    /**
+     * Checks that the description of a dimension is the one it was initialized with. Dimensions initialized with the
+     * one-argument constructor are expected to have a {@code null} description.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void descriptionTest()
     {
@@ -224,18 +230,57 @@ public class DimensionTest
         Assert.assertNull(noDescDimension.description());
     }
 
+    /**
+     * Checks that the {@code equals()} method returns expected results. The following scenarios are tested:
+     * <table>
+     *   <tr><th>Scenario Description</th><th>Expected Result</th></tr>
+     *   <tr><td>Equal names, null descriptions</td><td>T</td></tr>
+     *   <tr><td>Equal names, equal non-null descriptions</td><td>T</td></tr>
+     *   <tr><td>Different names, both descriptions null</td><td>F</td></tr>
+     *   <tr><td>Same name, one description null, one not</td><td>F</td></tr>
+     *   <tr><td>Same name, descriptions different but non-null</td><td>F</td></tr>
+     *   <tr><td>Different names, one description null, one not</td><td>F</td></tr>
+     *   <tr><td>Different names, descriptions different but non-null</td><td>F</td></tr>
+     * </table>
+     *
+     * @since 1.0.0
+     */
     @Test
     public void equalsTest()
     {
-        throw new RuntimeException("Test not implemented");
+    	// same name, null description
+        Assert.assertEquals(oneArgDimension, noDescDimension);
+    	// same name, same description
+        Assert.assertEquals(twoArgDimension, new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION));
+
+    	// diff name, null description
+        Assert.assertNotEquals(oneArgDimension, new TestDimension(DEFAULT_DESCRIPTION));
+    	// same name, one null description
+        Assert.assertNotEquals(oneArgDimension, twoArgDimension);
+    	// same name, diff description
+        Assert.assertNotEquals(twoArgDimension, new TestDimension(DEFAULT_NAME, DEFAULT_NAME));
+        // diff name, one null description
+        Assert.assertNotEquals(twoArgDimension, new TestDimension(DEFAULT_DESCRIPTION));
+        // diff name, diff description
+        Assert.assertNotEquals(twoArgDimension, new TestDimension(DEFAULT_DESCRIPTION, DEFAULT_NAME));
     }
 
+    /**
+     * Checks that the hash code of two equal dimensions is the same.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void hashCodeTest()
     {
-        throw new RuntimeException("Test not implemented");
+    	Assert.assertEquals(oneArgDimension.hashCode(), noDescDimension.hashCode());
     }
 
+    /**
+     * Checks that the name of the dimension is the one it was initialized with.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void nameTest()
     {
