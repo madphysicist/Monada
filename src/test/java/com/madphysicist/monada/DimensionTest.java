@@ -27,6 +27,11 @@
  */
 package com.madphysicist.monada;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -165,6 +170,23 @@ public class DimensionTest
         Assert.assertNull(noDescDimension.description());
     }
 
+    /**
+     * Provides data for {@link #compareComponentsTest(Dimension, Dimension)}. None of the dimensions returned by this
+     * data provider actually contain any components. The goal is to demonstrate that differences in the name and
+     * description (which affect both {@code equals()} and {@code compareTo()}) do not affect {@code
+     * compareComponents()}. The following pairs are tested, all of which are expected to be equal component-wise:
+     * <ul>
+     *   <li>Two identical dimensions</li>
+     *   <li>Two dimensions with different names, null descriptions</li>
+     *   <li>Two dimensions with different names, one null, one non-null description</li>
+     *   <li>Two dimensions with different names, different but non-null descriptions</li>
+     *   <li>Two dimensions with the same name, one null, one non-null description</li>
+     *   <li>Two dimensions with the same name, different but non-null descriptions</li>
+     * </ul>
+     *  
+     * @return a list of dimension pairs to test with.
+     * @since 1.0.0
+     */
     @DataProvider(name = "compareComponentsData")
     protected Object[][] compareComponentsData()
     {
@@ -174,6 +196,7 @@ public class DimensionTest
                 {twoArgDimension, twoArgDimension},
                 {noDescDimension, noDescDimension},
                 {oneArgDimension, new TestDimension(DEFAULT_DESCRIPTION)},
+                {twoArgDimension, new TestDimension(DEFAULT_DESCRIPTION)},
                 {noDescDimension, new TestDimension(DEFAULT_DESCRIPTION, null)},
                 {twoArgDimension, new TestDimension(DEFAULT_DESCRIPTION, DEFAULT_DESCRIPTION)},
                 {twoArgDimension, oneArgDimension},
@@ -289,9 +312,56 @@ public class DimensionTest
         Assert.assertSame(noDescDimension.name(), DEFAULT_NAME);
     }
 
+    /**
+     * Checks that dimension components are added to the map properly. Dimension components are added to an empty map
+     * with exponent factors varying from {@code -2.0} to {@code 2.0} in fractional steps of {@code 0.5}. A check is
+     * done to verify that they get added correctly. The components are added again with an exponent factor that is the
+     * negative of the original factor. The map is then expected to be empty. When added with an exponent factor of
+     * zero, the map is expected to stay empty during all stages of the check.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void combineDimensionComponentsTest()
     {
-        throw new RuntimeException("Test not implemented");
+        // Create dimensions
+        BaseDimension length = new BaseDimension("Length");
+        BaseDimension time = new BaseDimension("Time");
+        BaseDimension angle = new BaseDimension("Angle");
+
+        // Create components
+        DimensionComponent lengthComponent = new DimensionComponent(length);
+        DimensionComponent timeComponent = new DimensionComponent(time, -1.0f);
+        DimensionComponent angleComponent = new DimensionComponent(angle, 2.0f);
+
+        // Create list
+        List<DimensionComponent> componentList = Arrays.asList(new DimensionComponent[] {lengthComponent, timeComponent, angleComponent});
+
+        Map<BaseDimension, DimensionComponent> testMap = new HashMap<>();
+        for(float eFactor = -2.0f; eFactor <= 2.0f; eFactor += 0.5f) {
+            Assert.assertTrue(testMap.isEmpty());
+            // Add stuff to map
+            for(DimensionComponent component : componentList) {
+                Dimension.combineDimensionComponents(testMap, component, eFactor);
+            }
+
+            // Check that everything was added 
+            if(eFactor == 0.0f) {
+                Assert.assertEquals(testMap.size(), 0);
+            } else {
+                Assert.assertEquals(testMap.size(), 3);
+                for(DimensionComponent component : componentList) {
+                    DimensionComponent actual = testMap.get(component.dimension());
+                    Assert.assertSame(actual.dimension(), component.dimension());
+                    Assert.assertEquals(actual.exponent(), component.exponent() * eFactor);
+                }
+            }
+
+            // Add stuff with negative exponent
+            for(DimensionComponent component : componentList) {
+                Dimension.combineDimensionComponents(testMap, component, -eFactor);
+            }
+        }
+        Assert.assertTrue(testMap.isEmpty()); // Wrap-up call for symmetry
     }
 }

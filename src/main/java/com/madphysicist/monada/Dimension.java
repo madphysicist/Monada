@@ -233,7 +233,7 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
     {
         if(o != null && this.getClass() == o.getClass()) {
             Dimension dim = (Dimension)o;
-            return this.name.equals(dim.name) && this.description.equals(dim.description);
+            return this.name.equals(dim.name) && HashUtilities.refEquals(this.description, dim.description);
         }
         return false;
     }
@@ -292,8 +292,11 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
             if(prevComponent == null) {
                 if(eFactor == 1.0f)
                     map.put(dim, component); // Do not create new object if exponent factor is 1, which it will be a lot of the time 
-                else
-                    map.put(dim, new DimensionComponent(dim, eFactor * component.exponent()));
+                else {
+                    float newExponent = eFactor * component.exponent();
+                    if(newExponent != 0.0f)
+                        map.put(dim, new DimensionComponent(dim, newExponent));
+                }
             } else {
                 float newExponent = prevComponent.exponent() + eFactor * component.exponent();
                 if(newExponent == 0.0f)
