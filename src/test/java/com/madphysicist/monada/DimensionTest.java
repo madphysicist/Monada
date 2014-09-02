@@ -233,6 +233,12 @@ public class DimensionTest
             Assert.assertEquals(secondDimension.compareComponents(firstDimension), 0);
     }
 
+    /**
+     * Verifies that the {@code compareTo()} method compares instances with different names, descriptions and types
+     * correctly.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void compareToTest()
     {
