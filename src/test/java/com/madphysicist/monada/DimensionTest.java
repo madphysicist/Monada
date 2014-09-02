@@ -43,6 +43,7 @@ import org.testng.annotations.BeforeClass;
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 30 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
+ * @since 1.0
  */
 public class DimensionTest
 {
@@ -89,14 +90,37 @@ public class DimensionTest
     private Dimension noDescDimension;
 
     /**
+     * A dimension that is the same as {@link #oneArgDimension} and {@link #noDescDimension} in most ways, except that
+     * it has a different class. The name, description and components are the same. The class difference is implemented
+     * through the private inner type {@link #InnerTestDimension}. This reference is initialized only once by {@link
+     * #beforeClass()} because it is immutable.
+     *
+     * @since 1.0.0
+     */
+    private Dimension differentOneDimension;
+
+    /**
+     * A dimension that is the same as {@link #twoArgDimension} in most ways, except that it has a different class. The
+     * name, description and components are the same. The class difference is implemented through the private inner
+     * type {@link #InnerTestDimension}. This reference is initialized only once by {@link #beforeClass()} because it is
+     * immutable.
+     *
+     * @since 1.0.0
+     */
+    private Dimension differentTwoDimension;
+
+    /**
      * Sets up the private fields of this class for use by all the tests. The following fields are initialized:
      * <ul>
      *   <li>{@link #twoArgDimension}</li>
      *   <li>{@link #oneArgDimension}</li>
      *   <li>{@link #noDescDimension}</li>
+     *   <li>{@link #differentOneDimension}</li>
+     *   <li>{@link #differentTwoDimension}</li>
      * </ul>
      * Assertions are made that {@link #DEFAULT_NAME} and {@link #DEFAULT_DESCRIPTION} are non-{@code null} and not
-     * equal to each other.
+     * equal to each other. The name, description and class properties of the "different*Dimension" dimensions are also
+     * verified. Only the class properties should be different from the corresponding "*AgrDimension" dimensions.
      * 
      * @since 1.0.0
      */
@@ -110,6 +134,17 @@ public class DimensionTest
         twoArgDimension = new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
         oneArgDimension = new TestDimension(DEFAULT_NAME);
         noDescDimension = new TestDimension(DEFAULT_NAME, null);
+
+        differentOneDimension = new InnerTestDimension(DEFAULT_NAME);
+        differentTwoDimension = new InnerTestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
+
+        Assert.assertSame(oneArgDimension.name(), differentOneDimension.name());
+        Assert.assertSame(oneArgDimension.description(), differentOneDimension.description());
+        Assert.assertNotEquals(oneArgDimension.getClass(), differentOneDimension.getClass());
+
+        Assert.assertSame(twoArgDimension.name(), differentTwoDimension.name());
+        Assert.assertSame(twoArgDimension.description(), differentTwoDimension.description());
+        Assert.assertNotEquals(twoArgDimension.getClass(), differentTwoDimension.getClass());
     }
 
     /**
@@ -184,7 +219,7 @@ public class DimensionTest
      *   <li>Two dimensions with the same name, different but non-null descriptions</li>
      * </ul>
      *  
-     * @return a list of dimension pairs to test with.
+     * @return an array of dimension pairs to test {@code compareComponents()} againts.
      * @since 1.0.0
      */
     @DataProvider(name = "compareComponentsData")
@@ -234,13 +269,60 @@ public class DimensionTest
     }
 
     /**
+     * Provides data for {@link #compareToUnequalTest()} to verify that dimensions that are expected to be unequal are
+     * in fact unequal. This data provider implements scenarios in which the name, description and class name are
+     * different. The following is a list of the scenarios tested:
+     * <table>
+     *   <tr><th>Name</th><th>Description</th></th>Class</th></tr>
+     *   <tr><td>{@literal >}</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>{@literal >}</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>{@literal >}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td></td><td></td><td></td></tr>
+     * </table>
+     * The {@code {@literal >}} symbol indicates that the first dimension in the pair has this property greater. {@code
+     * =} means that the properties are the same for both dimensions in the pair.
+     *
+     * @return an array of unequal dimension pairs to test {@code compareTo()} against. The greater dimension is always
+     * the first of the pair.
+     * @since 1.0.0
+     */
+    @DataProvider(name = "compareToUnequalData")
+    protected Object[][] compareToUnequalData()
+    {
+        
+    }
+
+    /**
      * Verifies that the {@code compareTo()} method compares instances with different names, descriptions and types
      * correctly.
      *
      * @since 1.0.0
      */
-    @Test
-    public void compareToTest()
+    @Test(dataProvider = "")
+    public void compareToUnequalTest()
     {
         throw new RuntimeException("Test not implemented");
     }
@@ -270,6 +352,8 @@ public class DimensionTest
      *   <tr><td>Same name, descriptions different but non-null</td><td>F</td></tr>
      *   <tr><td>Different names, one description null, one not</td><td>F</td></tr>
      *   <tr><td>Different names, descriptions different but non-null</td><td>F</td></tr>
+     *   <tr><td>Equal names, equal both descriptions null, but different class</td><td>F</td></tr>
+     *   <tr><td>Equal names, equal non-null descriptions, but different class</td><td>F</td></tr>
      * </table>
      *
      * @since 1.0.0
@@ -292,6 +376,11 @@ public class DimensionTest
         Assert.assertNotEquals(twoArgDimension, new TestDimension(DEFAULT_DESCRIPTION));
         // diff name, diff description
         Assert.assertNotEquals(twoArgDimension, new TestDimension(DEFAULT_DESCRIPTION, DEFAULT_NAME));
+
+        // Different class, null descriptions
+        Assert.assertNotEquals(oneArgDimension, differentOneDimension);
+        // Different class, non-null descriptions
+        Assert.assertNotEquals(twoArgDimension, differentTwoDimension);
     }
 
     /**
@@ -369,5 +458,51 @@ public class DimensionTest
             }
         }
         Assert.assertTrue(testMap.isEmpty()); // Wrap-up call for symmetry
+    }
+
+    /**
+     * A dimension type that does not override any of the methods of its parent type. This class is intended to be test
+     * the class-differentiation properties of {@code Dimension}'s {@code equals()}, and {@code compareTo()} methods.
+     *
+     * @author Joseph Fox-Rabinovitz
+     * @version 1.0.0, 02 Sep 2014 - J. Fox-Rabinovitz - Initial coding.
+     * @since 1.0.0
+     */
+    private static class InnerTestDimension extends TestDimension
+    {
+        /**
+         * The version ID for serialization.
+         *
+         * @serial Increment the least significant three digits when
+         * compatibility is not compromised by a structural change (e.g. adding
+         * a new field with a sensible default value), and the upper digits when
+         * the change makes serialized versions of of the class incompatible
+         * with previous releases.
+         * @since 1.0.0
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Redirects to the superconstructor with the same argument list.
+         *
+         * @param name {@inheritDoc}
+         * @since 1.0.0
+         */
+        public InnerTestDimension(String name)
+        {
+            super(name);
+        }
+
+        /**
+         * Redirects to the superconstructor with the same argument list.
+         *
+         * @param name {@inheritDoc}
+         * @param description {@inheritDoc}
+         * @since 1.0.0
+         */
+        public InnerTestDimension(String name, String description)
+        {
+            super(name, description);
+        }
     }
 }

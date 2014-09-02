@@ -39,6 +39,7 @@ import org.testng.annotations.BeforeClass;
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 27 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
+ * @since 1.0
  */
 public class DimensionComponentTest
 {
