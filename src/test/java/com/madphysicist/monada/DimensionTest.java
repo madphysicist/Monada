@@ -234,15 +234,46 @@ public class DimensionTest
     }
 
     /**
-     * Verifies that the {@code compareTo()} method compares instances with different names, descriptions and types
-     * correctly.
+     * Verifies that the {@code compareTo()} method compares equal instances correctly. This method only tests equal
+     * dimensions. The test is performed both ways for thoroughness: both {@code dim1.compareTo(dim2) == 0} and {@code
+     * dim2.compareTo(dim1) == 0} must be true. This test also double-checks consistency with {@code equals()}. A
+     * similar check for unequal dimensions is done in {@link #compareToUnequalTest()}.
      *
      * @since 1.0.0
      */
     @Test
-    public void compareToTest()
+    public void compareToEqualTest()
     {
-        throw new RuntimeException("Test not implemented");
+        Assert.assertEquals(dim1.compareTo(dim2), 0);
+        Assert.assertEquals(dim2.compareTo(dim1), 0);
+        Assert.assertEquals(dim1, dim2);
+        Assert.assertEquals(dim2, dim2);
+    }
+
+    @DataProvider(name = "compareToUnequalData")
+    protected Object[][] compareToUnequalData()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Verifies that the {@code compareTo()} method compares instances with different names, descriptions and types
+     * correctly. This method only tests unequal dimensions. The test is performed both ways for thoroughness: both
+     * {@code greaterDim.compareTo(smallerDim) > 0} and {@code smallerDim.compareTo(greaterDim) < 0} must be true. This
+     * test also verifies consistency with {@code equals()}: all comparisons must return {@code false}. A similar check
+     * for equal dimensions is done in {@link #compareToEqualTest()}.
+     *
+     * @param greaterDim the larger of the two dimensions.
+     * @param smallerDim the smaller of the two dimensions.
+     * @since 1.0.0
+     */
+    @Test(dataProvider = "compareToUnequalData")
+    public void compareToUnequalTest(Dimension greaterDim, Dimension smallerDim)
+    {
+        Assert.assertTrue(greaterDim.compareTo(smallerDim) < 0);
+        Assert.assertTrue(smallerDim.compareTo(greaterDim) > 0);
+        Assert.assertFalse(greaterDim.equals(smallerDim));
+        Assert.assertFalse(smallerDim.equals(greaterDim));
     }
 
     /**
