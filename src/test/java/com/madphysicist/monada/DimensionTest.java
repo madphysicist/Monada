@@ -103,6 +103,7 @@ public class DimensionTest
     @BeforeClass
     private void beforeClass()
     {
+        System.out.println("Before class!");
         Assert.assertNotNull(DEFAULT_NAME);
         Assert.assertNotNull(DEFAULT_DESCRIPTION);
         Assert.assertNotEquals(DEFAULT_NAME, DEFAULT_DESCRIPTION);
@@ -233,21 +234,47 @@ public class DimensionTest
             Assert.assertEquals(secondDimension.compareComponents(firstDimension), 0);
     }
 
+    @DataProvider(name = "compareToEqualData")
+    protected Object[][] compareToEqulaData()
+    {
+        Dimension equalDimension = new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
+        System.out.println("compareToEqualsData!");
+        System.out.println("    1: " + oneArgDimension);
+        System.out.println("    2: " + twoArgDimension);
+        System.out.println("    N: " + noDescDimension);
+        System.out.println("    =: " + equalDimension);
+        return new Object[][] {
+                {oneArgDimension, oneArgDimension, true},
+                {twoArgDimension, twoArgDimension, true},
+                {oneArgDimension, noDescDimension, false},
+                {twoArgDimension, equalDimension,  false},
+        };
+    }
+
     /**
      * Verifies that the {@code compareTo()} method compares equal instances correctly. This method only tests equal
      * dimensions. The test is performed both ways for thoroughness: both {@code dim1.compareTo(dim2) == 0} and {@code
      * dim2.compareTo(dim1) == 0} must be true. This test also double-checks consistency with {@code equals()}. A
      * similar check for unequal dimensions is done in {@link #compareToUnequalTest()}.
      *
+     * @param dim1 the first dimension to compare.
+     * @param dim2 the second dimension to compare.
+     * @param same a flag indicating whether or not the two dimensions are the same reference. The appropriate assertion
+     * (same or not same) is made to double-check this flag.
      * @since 1.0.0
      */
-    @Test
-    public void compareToEqualTest()
+    @Test(dataProvider = "compareToEqualData")
+    public void compareToEqualTest(Dimension dim1, Dimension dim2, boolean same)
     {
-        Assert.assertEquals(dim1.compareTo(dim2), 0);
-        Assert.assertEquals(dim2.compareTo(dim1), 0);
+        System.out.println("compareToEqualsTest!");
+        if(same)
+            Assert.assertSame(dim1, dim2);
+        else
+            Assert.assertNotSame(dim1, dim2);
         Assert.assertEquals(dim1, dim2);
         Assert.assertEquals(dim2, dim2);
+        Assert.assertEquals(dim1.compareTo(dim2), 0);
+        Assert.assertEquals(dim2.compareTo(dim1), 0);
     }
 
     @DataProvider(name = "compareToUnequalData")

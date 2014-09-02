@@ -211,7 +211,11 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
             return comp;
 
         // If names are equal, compare by description
-        comp = this.description().compareTo(o.description());
+        if(this.description == null) {
+            comp = (o.description == null) ? 0 : 1;
+        } else {
+            comp = this.description().compareTo(o.description());
+        }
         if(comp != 0)
             return comp;
 
