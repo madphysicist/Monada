@@ -268,6 +268,43 @@ public class DimensionTest
             Assert.assertEquals(secondDimension.compareComponents(firstDimension), 0);
     }
 
+    @DataProvider(name = "compareToEqualData")
+    protected Object[][] compareToEqulaData()
+    {
+        Dimension equalDimension = new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
+        return new Object[][] {
+                {oneArgDimension, oneArgDimension, true},
+                {twoArgDimension, twoArgDimension, true},
+                {oneArgDimension, noDescDimension, false},
+                {twoArgDimension, equalDimension,  false},
+        };
+    }
+
+    /**
+     * Verifies that the {@code compareTo()} method compares equal instances correctly. This method only tests equal
+     * dimensions. The test is performed both ways for thoroughness: both {@code dim1.compareTo(dim2) == 0} and {@code
+     * dim2.compareTo(dim1) == 0} must be true. This test also double-checks consistency with {@code equals()}. A
+     * similar check for unequal dimensions is done in {@link #compareToUnequalTest()}.
+     *
+     * @param dim1 the first dimension to compare.
+     * @param dim2 the second dimension to compare.
+     * @param same a flag indicating whether or not the two dimensions are the same reference. The appropriate assertion
+     * (same or not same) is made to double-check this flag.
+     * @since 1.0.0
+     */
+    @Test(dataProvider = "compareToEqualData")
+    public void compareToEqualTest(Dimension dim1, Dimension dim2, boolean same)
+    {
+        if(same)
+            Assert.assertSame(dim1, dim2);
+        else
+            Assert.assertNotSame(dim1, dim2);
+        Assert.assertEquals(dim1, dim2);
+        Assert.assertEquals(dim2, dim2);
+        Assert.assertEquals(dim1.compareTo(dim2), 0);
+        Assert.assertEquals(dim2.compareTo(dim1), 0);
+    }
+
     /**
      * Provides data for {@link #compareToUnequalTest()} to verify that dimensions that are expected to be unequal are
      * in fact unequal. This data provider implements scenarios in which the name, description and class name are
@@ -312,19 +349,27 @@ public class DimensionTest
     @DataProvider(name = "compareToUnequalData")
     protected Object[][] compareToUnequalData()
     {
-        
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Verifies that the {@code compareTo()} method compares instances with different names, descriptions and types
-     * correctly.
+     * correctly. This method only tests unequal dimensions. The test is performed both ways for thoroughness: both
+     * {@code greaterDim.compareTo(smallerDim) > 0} and {@code smallerDim.compareTo(greaterDim) < 0} must be true. This
+     * test also verifies consistency with {@code equals()}: all comparisons must return {@code false}. A similar check
+     * for equal dimensions is done in {@link #compareToEqualTest()}.
      *
+     * @param greaterDim the larger of the two dimensions.
+     * @param smallerDim the smaller of the two dimensions.
      * @since 1.0.0
      */
-    @Test(dataProvider = "")
-    public void compareToUnequalTest()
+    @Test(dataProvider = "compareToUnequalData")
+    public void compareToUnequalTest(Dimension greaterDim, Dimension smallerDim)
     {
-        throw new RuntimeException("Test not implemented");
+        Assert.assertTrue(greaterDim.compareTo(smallerDim) < 0);
+        Assert.assertTrue(smallerDim.compareTo(greaterDim) > 0);
+        Assert.assertFalse(greaterDim.equals(smallerDim));
+        Assert.assertFalse(smallerDim.equals(greaterDim));
     }
 
     /**
