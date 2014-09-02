@@ -27,6 +27,8 @@
  */
 package com.madphysicist.monada;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -120,7 +122,7 @@ public class DimensionTest
      * </ul>
      * Assertions are made that {@link #DEFAULT_NAME} and {@link #DEFAULT_DESCRIPTION} are non-{@code null} and not
      * equal to each other. The name, description and class properties of the "different*Dimension" dimensions are also
-     * verified. Only the class properties should be different from the corresponding "*AgrDimension" dimensions.
+     * verified. Only the class properties should be different from the corresponding "*ArgDimension" dimensions.
      * 
      * @since 1.0.0
      */
@@ -144,7 +146,7 @@ public class DimensionTest
 
         Assert.assertSame(twoArgDimension.name(), differentTwoDimension.name());
         Assert.assertSame(twoArgDimension.description(), differentTwoDimension.description());
-        Assert.assertNotEquals(twoArgDimension.getClass(), differentTwoDimension.getClass());
+        Assert.assertNotEquals(twoArgDimension.getClass().getName(), differentTwoDimension.getClass().getName());
     }
 
     /**
@@ -203,6 +205,20 @@ public class DimensionTest
 
         Assert.assertSame(noDescDimension.name(), DEFAULT_NAME);
         Assert.assertNull(noDescDimension.description());
+    }
+
+    /**
+     * Checks that {@code compareComponents()} fails if a {@code null} reference is passed in. The expected failure is a
+     * {@code NullPointerException}.
+     *
+     * @throws NullPointerException as expected.
+     * @since 1.0.0
+     */
+    @Test(expectedExceptions = NullPointerException.class)
+    public void compareComponentsNullTest() throws NullPointerException
+    {
+        twoArgDimension.compareComponents(null);
+        Assert.fail();
     }
 
     /**
@@ -268,15 +284,36 @@ public class DimensionTest
             Assert.assertEquals(secondDimension.compareComponents(firstDimension), 0);
     }
 
+    /**
+     * Checks that {@code compareTo()} fails if a {@code null} reference is passed in. The expected failure is a {@code
+     * NullPointerException}.
+     *
+     * @throws NullPointerException as expected.
+     * @since 1.0.0
+     */
+    @Test(expectedExceptions = NullPointerException.class)
+    public void compareToNullTest() throws NullPointerException
+    {
+        twoArgDimension.compareTo(null);
+        Assert.fail();
+    }
+
+    /**
+     * Provides data for {@link #compareToEqualTest()} to verify that dimensions that are expected to be equal are in
+     * fact equal. Both identical and non-identical instances are tested.
+     *
+     * @return an array of equal dimension pairs.
+     * @since 1.0.0
+     */
     @DataProvider(name = "compareToEqualData")
-    protected Object[][] compareToEqulaData()
+    protected Object[][] compareToEqualData()
     {
         Dimension equalDimension = new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
         return new Object[][] {
-                {oneArgDimension, oneArgDimension, true},
-                {twoArgDimension, twoArgDimension, true},
-                {oneArgDimension, noDescDimension, false},
-                {twoArgDimension, equalDimension,  false},
+                {oneArgDimension, oneArgDimension},
+                {twoArgDimension, twoArgDimension},
+                {oneArgDimension, noDescDimension},
+                {twoArgDimension, equalDimension},
         };
     }
 
@@ -293,12 +330,8 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test(dataProvider = "compareToEqualData")
-    public void compareToEqualTest(Dimension dim1, Dimension dim2, boolean same)
+    public void compareToEqualTest(Dimension dim1, Dimension dim2)
     {
-        if(same)
-            Assert.assertSame(dim1, dim2);
-        else
-            Assert.assertNotSame(dim1, dim2);
         Assert.assertEquals(dim1, dim2);
         Assert.assertEquals(dim2, dim2);
         Assert.assertEquals(dim1.compareTo(dim2), 0);
@@ -309,67 +342,120 @@ public class DimensionTest
      * Provides data for {@link #compareToUnequalTest()} to verify that dimensions that are expected to be unequal are
      * in fact unequal. This data provider implements scenarios in which the name, description and class name are
      * different. The following is a list of the scenarios tested:
-     * <table>
-     *   <tr><th>Name</th><th>Description</th></th>Class</th></tr>
+     * <table border="1">
+     *   <tr><th>Name</th><th>Description</th><th>Class</th></tr>
      *   <tr><td>{@literal >}</td><td>=</td><td>=</td></tr>
      *   <tr><td>=</td><td>{@literal >}</td><td>=</td></tr>
      *   <tr><td>=</td><td>=</td><td>{@literal >}</td></tr>
-     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
-     *   <tr><td></td><td></td><td></td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>=</td></tr>
+     *   <tr><td>{@literal >}</td><td>=</td><td>{@literal >}</td></tr>
+     *   <tr><td>=</td><td>{@literal >}</td><td>{@literal >}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td></tr>
      * </table>
-     * The {@code {@literal >}} symbol indicates that the first dimension in the pair has this property greater. {@code
-     * =} means that the properties are the same for both dimensions in the pair.
+     * Additional tests check the order in which properties are tested:
+     * <table border="1">
+     *   <tr><th>Name</th><th>Description</th><th>Class</th></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal <}</td><td>{@literal <}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal =}</td><td>{@literal <}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal <}</td><td>{@literal =}</td></tr>
+     *   <tr><td>=</td><td>{@literal >}</td><td>{@literal <}</td></tr>
+     * </table>
+     * The {@code {@literal >}} symbol indicates that the first dimension in the pair has this property greater,
+     * while {@literal <} indicates a smaller vaule for the property. {@code =} means that the properties are the same
+     * for both dimensions in the pair.
      *
      * @return an array of unequal dimension pairs to test {@code compareTo()} against. The greater dimension is always
      * the first of the pair.
+     * @throws NoSuchMethodException if a two {@code String} constructor for either sub-type of {@code Dimension} being
+     * tested with can not be found for some reason. This is not an expected condition and will cause failure. 
+     * @throws SecurityException if a constructor for either sub-type of {@code Dimension} being tested with can not be
+     * acquired. This is not an expected condition and will cause failure.
+     * @throws InstantiationException if one of the sub-type constructors for {@code Dimension} can not be invoked for
+     * some reason. This is not an expected condition and will cause failure.
+     * @throws IllegalAccessException if one of the sub-type constructors for {@code Dimension} can not be invoked for
+     * some reason. This is not an expected condition and will cause failure.
+     * @throws IllegalArgumentException if one of the sub-type constructors for {@code Dimension} is passed an argument
+     * of an invalid type for some reason. All constructors should accept two {@code String} arguments. This is not an
+     * expected condition and will cause failure.
+     * @throws InvocationTargetException if one of the sub-type constructors for {@code Dimension} throws an exception
+     * when it is called. This is not an expected condition and will cause failure.
      * @since 1.0.0
      */
     @DataProvider(name = "compareToUnequalData")
-    protected Object[][] compareToUnequalData()
+    protected Object[][] compareToUnequalData() throws NoSuchMethodException, SecurityException,
+                                                       InstantiationException, IllegalAccessException,
+                                                       IllegalArgumentException, InvocationTargetException
     {
-        throw new UnsupportedOperationException();
+        String bigStr, lilStr;
+        Class<? extends Dimension> bigClass, lilClass;
+        Constructor<? extends Dimension> bigConstr, lilConstr;
+
+        if(DEFAULT_NAME.compareTo(DEFAULT_DESCRIPTION) > 0) {
+            bigStr = DEFAULT_NAME;
+            lilStr = DEFAULT_DESCRIPTION;
+        } else {
+            bigStr = DEFAULT_DESCRIPTION;
+            lilStr = DEFAULT_NAME;
+        }
+
+        if(TestDimension.class.getName().compareTo(InnerTestDimension.class.getName()) > 0) {
+            bigClass = TestDimension.class;
+            lilClass = InnerTestDimension.class;
+        } else {
+            bigClass = InnerTestDimension.class;
+            lilClass = TestDimension.class;
+        }
+        bigConstr = bigClass.getConstructor(String.class, String.class);
+        lilConstr = lilClass.getConstructor(String.class, String.class);
+
+        return new Object[][] {
+                // Basic: no less-thans
+                {bigConstr.newInstance(bigStr, null),   bigConstr.newInstance(lilStr, null)},   // >, =, =
+                {lilConstr.newInstance(bigStr, lilStr), lilConstr.newInstance(lilStr, lilStr)}, // >, =, =
+                {bigConstr.newInstance(lilStr, lilStr), bigConstr.newInstance(lilStr, null)},   // =, >, =
+                {lilConstr.newInstance(bigStr, bigStr), lilConstr.newInstance(bigStr, lilStr)}, // =, >, =
+                {bigConstr.newInstance(lilStr, null),   lilConstr.newInstance(lilStr, null)},   // =, =, >
+                {bigConstr.newInstance(bigStr, bigStr), lilConstr.newInstance(bigStr, bigStr)}, // =, =, >
+                {lilConstr.newInstance(bigStr, bigStr), lilConstr.newInstance(lilStr, null)},   // >, >, =
+                {bigConstr.newInstance(bigStr, bigStr), bigConstr.newInstance(lilStr, lilStr)}, // >, >, =
+                {bigConstr.newInstance(bigStr, null),   lilConstr.newInstance(lilStr, null)},   // >, =, >
+                {bigConstr.newInstance(bigStr, lilStr), lilConstr.newInstance(lilStr, lilStr)}, // >, =, >
+                {bigConstr.newInstance(lilStr, lilStr), lilConstr.newInstance(lilStr, null)},   // =, >, >
+                {bigConstr.newInstance(bigStr, bigStr), lilConstr.newInstance(bigStr, lilStr)}, // =, >, >
+                {bigConstr.newInstance(bigStr, lilStr), lilConstr.newInstance(lilStr, null)},   // >, >, >
+                {bigConstr.newInstance(bigStr, bigStr), lilConstr.newInstance(lilStr, lilStr)}, // >, >, >
+
+                // Advanced: less-thans
+                {lilConstr.newInstance(bigStr, null),   bigConstr.newInstance(lilStr, bigStr)}, // >, <, <
+                {lilConstr.newInstance(bigStr, lilStr), bigConstr.newInstance(lilStr, bigStr)}, // >, <, <
+                {lilConstr.newInstance(bigStr, null),   bigConstr.newInstance(lilStr, null)},   // >, =, <
+                {lilConstr.newInstance(bigStr, lilStr), bigConstr.newInstance(lilStr, lilStr)}, // >, =, <
+                {lilConstr.newInstance(bigStr, null),   lilConstr.newInstance(lilStr, lilStr)}, // >, <, =
+                {bigConstr.newInstance(bigStr, lilStr), bigConstr.newInstance(lilStr, bigStr)}, // >, <, =
+                {lilConstr.newInstance(bigStr, lilStr), bigConstr.newInstance(bigStr, null)},   // =, >, <
+                {lilConstr.newInstance(lilStr, bigStr), bigConstr.newInstance(lilStr, lilStr)}  // =, >, <
+        };
     }
 
     /**
      * Verifies that the {@code compareTo()} method compares instances with different names, descriptions and types
      * correctly. This method only tests unequal dimensions. The test is performed both ways for thoroughness: both
-     * {@code greaterDim.compareTo(smallerDim) > 0} and {@code smallerDim.compareTo(greaterDim) < 0} must be true. This
-     * test also verifies consistency with {@code equals()}: all comparisons must return {@code false}. A similar check
-     * for equal dimensions is done in {@link #compareToEqualTest()}.
+     * {@code bigDim.compareTo(lilDim) > 0} and {@code lilDim.compareTo(bigDim) < 0} must be true. This test also
+     * verifies consistency with {@code equals()}: all comparisons must return {@code false}. A similar check for equal
+     * dimensions is done in {@link #compareToEqualTest()}.
      *
-     * @param greaterDim the larger of the two dimensions.
-     * @param smallerDim the smaller of the two dimensions.
+     * @param bigDim the larger of the two dimensions.
+     * @param lilDim the smaller of the two dimensions.
      * @since 1.0.0
      */
     @Test(dataProvider = "compareToUnequalData")
-    public void compareToUnequalTest(Dimension greaterDim, Dimension smallerDim)
+    public void compareToUnequalTest(Dimension bigDim, Dimension lilDim)
     {
-        Assert.assertTrue(greaterDim.compareTo(smallerDim) < 0);
-        Assert.assertTrue(smallerDim.compareTo(greaterDim) > 0);
-        Assert.assertFalse(greaterDim.equals(smallerDim));
-        Assert.assertFalse(smallerDim.equals(greaterDim));
+        Assert.assertTrue(bigDim.compareTo(lilDim) > 0);
+        Assert.assertTrue(lilDim.compareTo(bigDim) < 0);
+
+        Assert.assertFalse(bigDim.equals(lilDim));
+        Assert.assertFalse(lilDim.equals(bigDim));
     }
 
     /**
@@ -388,10 +474,11 @@ public class DimensionTest
 
     /**
      * Checks that the {@code equals()} method returns expected results. The following scenarios are tested:
-     * <table>
+     * <table border="1">
      *   <tr><th>Scenario Description</th><th>Expected Result</th></tr>
      *   <tr><td>Equal names, null descriptions</td><td>T</td></tr>
      *   <tr><td>Equal names, equal non-null descriptions</td><td>T</td></tr>
+     *   <tr><td>Comparison against a null reference</td><td>F</td></tr>
      *   <tr><td>Different names, both descriptions null</td><td>F</td></tr>
      *   <tr><td>Same name, one description null, one not</td><td>F</td></tr>
      *   <tr><td>Same name, descriptions different but non-null</td><td>F</td></tr>
@@ -411,6 +498,9 @@ public class DimensionTest
     	// same name, same description
         Assert.assertEquals(twoArgDimension, new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION));
 
+        // against null
+        Assert.assertNotEquals(oneArgDimension, null);
+        
     	// diff name, null description
         Assert.assertNotEquals(oneArgDimension, new TestDimension(DEFAULT_DESCRIPTION));
     	// same name, one null description
