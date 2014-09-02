@@ -34,8 +34,9 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 /**
- * Tests each of the methods of {@link com.madphysicist.monada.DimensionComponent} except {@code toString()}. The string
- * representation is provided for debugging and is not guaranteed to match anything.
+ * Tests each of the methods of {@link DimensionComponent} except {@code toString()}. The string representation is
+ * provided for debugging and is not guaranteed to match anything. The trivial getters ({@code exponent()} and {@code
+ * dimension()}) are tested along with the constructor.
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 27 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
@@ -386,20 +387,6 @@ public class DimensionComponentTest
     }
 
     /**
-     * Checks that the result of {@code dimension()} is the same reference as the component was created with.
-     *
-     * @since 1.0.0
-     */
-    @Test
-    public void dimensionTest()
-    {
-        Assert.assertSame(component.dimension(), dimension);
-        Assert.assertSame(identicalComponent.dimension(), dimension);
-        Assert.assertSame(sameComponent.dimension(), sameDimension);
-        Assert.assertSame(linearComponent.dimension(), greaterDimension);
-    }
-
-    /**
      * Checks that components are labeled as equal or unequal correctly. The following are expected to hold true:
      * <table>
      *   <tr><th>Compare against component that has/is...</th><th>Result is Equal?</th></tr>
@@ -448,23 +435,6 @@ public class DimensionComponentTest
         DimensionComponent differentComponent = new DimensionComponent(greaterDimension, greaterExponent);
         Assert.assertNotSame(differentComponent, component);
         Assert.assertNotEquals(differentComponent, component);
-    }
-
-    /**
-     * Check the result of {@code exponent()} is the same as the exponent with which the component was constructed.
-     *
-     * @since 1.0.0
-     */
-    @Test
-    public void exponentTest()
-    {
-        // 2-arg constructor
-        Assert.assertEquals(component.exponent(), exponent);
-        Assert.assertEquals(identicalComponent.exponent(), exponent);
-        Assert.assertEquals(sameComponent.exponent(), exponent);
-
-        // 1-arg constructor
-        Assert.assertEquals(linearComponent.exponent(), 1.0f);
     }
 
     /**
