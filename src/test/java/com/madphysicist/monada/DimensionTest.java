@@ -40,8 +40,9 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 /**
- * Tests each of the methods of {@link Dimension} except {@code toString()}. The string representation is provided for
- * debugging and is not guaranteed to match anything.
+ * Tests each of the methods of {@link com.madphysicist.monada.Dimension} except {@code toString()}. The string
+ * representation is provided for debugging and is not guaranteed to match anything. The trivial getters ({@code name()}
+ * and {@code description()}) are tested along with the constructor.
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 30 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
@@ -459,20 +460,6 @@ public class DimensionTest
     }
 
     /**
-     * Checks that the description of a dimension is the one it was initialized with. Dimensions initialized with the
-     * one-argument constructor are expected to have a {@code null} description.
-     *
-     * @since 1.0.0
-     */
-    @Test
-    public void descriptionTest()
-    {
-        Assert.assertSame(twoArgDimension.description(), DEFAULT_DESCRIPTION);
-        Assert.assertNull(oneArgDimension.description());
-        Assert.assertNull(noDescDimension.description());
-    }
-
-    /**
      * Checks that the {@code equals()} method returns expected results. The following scenarios are tested:
      * <table border="1">
      *   <tr><th>Scenario Description</th><th>Expected Result</th></tr>
@@ -527,19 +514,6 @@ public class DimensionTest
     public void hashCodeTest()
     {
     	Assert.assertEquals(oneArgDimension.hashCode(), noDescDimension.hashCode());
-    }
-
-    /**
-     * Checks that the name of the dimension is the one it was initialized with.
-     *
-     * @since 1.0.0
-     */
-    @Test
-    public void nameTest()
-    {
-        Assert.assertSame(twoArgDimension.name(), DEFAULT_NAME);
-        Assert.assertSame(oneArgDimension.name(), DEFAULT_NAME);
-        Assert.assertSame(noDescDimension.name(), DEFAULT_NAME);
     }
 
     /**
