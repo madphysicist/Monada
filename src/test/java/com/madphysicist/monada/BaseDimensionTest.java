@@ -27,13 +27,17 @@
  */
 package com.madphysicist.monada;
 
+import java.util.Iterator;
+
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 /**
  * Tests each of the methods of {@link BaseDimension} except {@code toString()}. The string representation is provided
- * for debugging and is not guaranteed to match anything.
+ * for debugging and is not guaranteed to match anything. The trivial getters ({@code name()}, {@code description()},
+ * and {@code isNull()}) are tested along with the constructors.
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 30 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
@@ -58,8 +62,17 @@ public class BaseDimensionTest
     private static final String DEFAULT_DESCRIPTION = "A Dimension for Testing";
 
     /**
-     * Assertions are made that {@link #DEFAULT_NAME} and {@link #DEFAULT_DESCRIPTION} are non-{@code null} and not
-     * equal to each other.
+     * A generic dimension that can be used for testing. This dimension has a description and is not a null dimension.
+     * It is only initialized once by {@link #beforeClass()} since it is immutable.
+     *
+     * @since 1.0.0
+     */
+    private BaseDimension someDimension;
+
+    /**
+     * Initializes the fields of this class for use by the tests. Specifically, {@link #someDimension} is initialized
+     * to have a non-{@code null} description and a null status of {@code false}. Assertions are made that {@link
+     * #DEFAULT_NAME} and {@link #DEFAULT_DESCRIPTION} are non-{@code null} and not equal to each other.
      *
      * @since 1.0.0
      */
@@ -69,6 +82,10 @@ public class BaseDimensionTest
         Assert.assertNotNull(DEFAULT_NAME);
         Assert.assertNotNull(DEFAULT_DESCRIPTION);
         Assert.assertNotEquals(DEFAULT_NAME, DEFAULT_DESCRIPTION);
+
+        someDimension = new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
+        Assert.assertNotNull(someDimension.description());
+        Assert.assertFalse(someDimension.isNull());
     }
 
     /**
@@ -79,7 +96,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void NameOnlyConstructorNullTest() throws NullPointerException
+    public void nameOnlyConstructorNullTest() throws NullPointerException
     {
         new BaseDimension(null);
         Assert.fail();
@@ -93,7 +110,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test
-    public void NameOnlyConstructorTest()
+    public void nameOnlyConstructorTest()
     {
         BaseDimension dim = new BaseDimension(DEFAULT_NAME);
         Assert.assertSame(dim.name(), DEFAULT_NAME);
@@ -109,7 +126,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void NameDescriptionConstructorNullTest() throws NullPointerException
+    public void nameDescriptionConstructorNullTest() throws NullPointerException
     {
         new BaseDimension(null, DEFAULT_DESCRIPTION);
         Assert.fail();
@@ -123,7 +140,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test
-    public void NameDescriptionConstructorTest()
+    public void nameDescriptionConstructorTest()
     {
         BaseDimension dim1 = new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION);
         Assert.assertSame(dim1.name(), DEFAULT_NAME);
@@ -144,7 +161,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void NameNullConstructorNullTest() throws NullPointerException
+    public void nameNullConstructorNullTest() throws NullPointerException
     {
         new BaseDimension(null, true);
         Assert.fail();
@@ -158,7 +175,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test
-    public void NameNullConstructorTest()
+    public void nameNullConstructorTest()
     {
         BaseDimension dim1 = new BaseDimension(DEFAULT_NAME, true);
         Assert.assertSame(dim1.name(), DEFAULT_NAME);
@@ -179,10 +196,34 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void FullConstructorNullTest() throws NullPointerException
+    public void fullConstructorNullTest() throws NullPointerException
     {
         new BaseDimension(null, DEFAULT_DESCRIPTION, true);
         Assert.fail();
+    }
+
+    /**
+     * Provides data to test the full constructor. The following scenarios are tested:
+     * <table border=1>
+     *   <tr><th>Name</th><th>Description</th><th>isNull</th></tr>
+     *   <tr><td>non-null</td><td>null</td><td>false</td></tr>
+     *   <tr><td>non-null</td><td>null</td><td>true</td></tr>
+     *   <tr><td>non-null</td><td>non-null</td><td>false</td></tr>
+     *   <tr><td>non-null</td><td>non-null</td><td>true</td></tr>
+     * </table>
+     *
+     * @return an array of name-description-isNull arrays containing inputs to the full constructor.
+     * @since 1.0.0
+     */
+    @DataProvider(name = "fullConstructorData")
+    protected Object[][] fullConstructorData()
+    {
+        return new Object[][] {
+                {DEFAULT_NAME, null, false},
+                {DEFAULT_NAME, null, true},
+                {DEFAULT_NAME, DEFAULT_DESCRIPTION, false},
+                {DEFAULT_NAME, DEFAULT_DESCRIPTION, true}
+        };
     }
 
     /**
@@ -191,28 +232,13 @@ public class BaseDimensionTest
      *
      * @since 1.0.0
      */
-    @Test
-    public void FullConstructorTest()
+    @Test(dataProvider = "fullConstructorData")
+    public void fullConstructorTest(String name, String description, boolean isNull)
     {
-        BaseDimension dim1 = new BaseDimension(DEFAULT_NAME, null, false);
-        Assert.assertSame(dim1.name(), DEFAULT_NAME);
-        Assert.assertNull(dim1.description());
-        Assert.assertFalse(dim1.isNull());
-
-        BaseDimension dim2 = new BaseDimension(DEFAULT_NAME, null, true);
-        Assert.assertSame(dim2.name(), DEFAULT_NAME);
-        Assert.assertNull(dim2.description());
-        Assert.assertTrue(dim2.isNull());
-
-        BaseDimension dim3 = new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, false);
-        Assert.assertSame(dim3.name(), DEFAULT_NAME);
-        Assert.assertSame(dim3.description(), DEFAULT_DESCRIPTION);
-        Assert.assertFalse(dim3.isNull());
-
-        BaseDimension dim4 = new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true);
-        Assert.assertSame(dim4.name(), DEFAULT_NAME);
-        Assert.assertSame(dim4.description(), DEFAULT_DESCRIPTION);
-        Assert.assertTrue(dim4.isNull());
+        BaseDimension dim = new BaseDimension(name, description, isNull);
+        Assert.assertSame(dim.name(), name);
+        Assert.assertSame(dim.description(), description);
+        Assert.assertEquals(dim.isNull(), isNull);
     }
 
     @Test
@@ -221,10 +247,15 @@ public class BaseDimensionTest
         throw new RuntimeException("Test not implemented");
     }
 
+    /**
+     * Checks that the component count is {@code 1}.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void componentCountTest()
     {
-        throw new RuntimeException("Test not implemented");
+        Assert.assertEquals(someDimension.componentCount(), 1);
     }
 
     @Test
@@ -233,21 +264,43 @@ public class BaseDimensionTest
         throw new RuntimeException("Test not implemented");
     }
 
+    /**
+     * Checks that two dimensions initialized with the same parameters have the same has code.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void hashCodeTest()
     {
-        throw new RuntimeException("Test not implemented");
+        BaseDimension dim1 = new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true);
+        BaseDimension dim2 = new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true);
+
+        Assert.assertNotSame(dim1, dim2);
+        Assert.assertEquals(dim1, dim2);
+        Assert.assertEquals(dim1.hashCode(), dim2.hashCode());
     }
 
+    /**
+     * Checks that the iterator over a {@code BaseDimension} contains only one {@code DimensionComponent}, and that that
+     * component is linear in the dimension itself.
+     *
+     * @since 1.0.0
+     */
     @Test
     public void iteratorTest()
     {
-        throw new RuntimeException("Test not implemented");
-    }
+        // Make iterator
+        Iterator<DimensionComponent> iterator = someDimension.iterator();
 
-    @Test
-    public void normalizeTest()
-    {
-        throw new RuntimeException("Test not implemented");
+        // Check that it has at least one item
+        Assert.assertTrue(iterator.hasNext());
+
+        // Get that item and test its properties
+        DimensionComponent component = iterator.next();
+        Assert.assertEquals(component.exponent(), 1.0f);
+        Assert.assertSame(component.dimension(), someDimension);
+
+        // Check that it had exactly one item
+        Assert.assertFalse(iterator.hasNext());
     }
 }

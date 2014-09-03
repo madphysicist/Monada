@@ -87,7 +87,7 @@ public class BaseDimension extends Dimension
      * @serial
      * @since 1.0.0
      */
-    public boolean isNull;
+    private boolean isNull;
 
     /**
      * Constructs a base dimension with the specified name and no description. The new dimension is not a null
