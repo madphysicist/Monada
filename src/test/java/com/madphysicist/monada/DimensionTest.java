@@ -40,8 +40,8 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
 
 /**
- * Tests each of the methods of {@link com.madphysicist.monada.Dimension} except {@code toString()}. The string
- * representation is provided for debugging and is not guaranteed to match anything.
+ * Tests each of the methods of {@link Dimension} except {@code toString()}. The string representation is provided for
+ * debugging and is not guaranteed to match anything.
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 30 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
