@@ -187,7 +187,7 @@ public class BaseDimension extends Dimension
             return comp;
 
         // If base properties are the same, compare null status
-        boolean oIsNull = ((BaseDimension)o).isNull;
+        boolean oIsNull = ((BaseDimension)o).isNull; // super.compareTo() guarantees the exact same class
         if(this.isNull == oIsNull)
             return 0;
         // null < non-null

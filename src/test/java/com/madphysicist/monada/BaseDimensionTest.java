@@ -241,10 +241,171 @@ public class BaseDimensionTest
         Assert.assertEquals(dim.isNull(), isNull);
     }
 
-    @Test
-    public void compareToTest()
+    /**
+     * Checks that a dimension is never equal to {@code null} and that comparison against {@code null} fails. The
+     * expected failure is a {@code NullPointerException}.
+     *
+     * @throws NullPointerException as expected when calling {@code compareTo(null)}.
+     * @since 1.0.0
+     */
+    @Test(expectedExceptions = NullPointerException.class)
+    public void compareNullTest() throws NullPointerException
     {
-        throw new RuntimeException("Test not implemented");
+        Assert.assertNotEquals(someDimension, null);
+        someDimension.compareTo(null);
+        Assert.fail();
+    }
+
+    /**
+     * Provides data for {@link #compareEqualTest(BaseDimension, BaseDimension)} and to check that dimensions expected
+     * to be equal are indeed equal. The following cases are verified:
+     * <ul>
+     *   <li>Same reference</li>
+     *   <li>No description, non-null dimension</li>
+     *   <li>No description, null dimension</li>
+     *   <li>Yes description, non-null dimension</li>
+     *   <li>Yes description, null dimension</li>
+     * </ul>
+     *
+     * @return an array of pairs of dimensions that are expected to be equal.
+     * @since 1.0.0
+     */
+    @DataProvider(name = "compareEqualData")
+    protected Object[][] compareEqualData()
+    {
+        return new Object[][] {
+                {someDimension, someDimension},
+                {new BaseDimension(DEFAULT_NAME), new BaseDimension(DEFAULT_NAME)},
+                {new BaseDimension(DEFAULT_NAME, true), new BaseDimension(DEFAULT_NAME, true)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true)}
+        };
+    }
+
+    /**
+     * Verifies that the {@code compareTo()} and {@code equals()} methods compare equal instances correctly. This method
+     * only tests equal dimensions. The test is performed symmetrically for both methods: both {@code
+     * dim1.compareTo(dim2) == 0} and {@code dim2.compareTo(dim1) == 0} must be true. Likewise, both {@code
+     * dim1.equals(dim2)} and {@code dim2.equals(dim1)} must be true. This test is therefore also checking for
+     * consistency with {@code equals()}. Similar checks for unequal dimensions are done in {@link
+     * #compareUnequalTest(BaseDimension, Dimension)} and {@link #compareNullTest()}.
+     *
+     * @param dim1 the first dimension to compare.
+     * @param dim2 the second dimension to compare.
+     * @since 1.0.0
+     */
+    @Test(dataProvider = "compareEqualData")
+    public void compareEqualTest(BaseDimension dim1, BaseDimension dim2)
+    {
+        Assert.assertEquals(dim1, dim2);
+        Assert.assertEquals(dim2, dim2);
+        Assert.assertEquals(dim1.compareTo(dim2), 0);
+        Assert.assertEquals(dim2.compareTo(dim1), 0);
+    }
+
+    /**
+     * Provides data to {@link #compareUnequalTest(BaseDimension, Dimension)} to verify that unequal dimensions are
+     * marked as such. The greater of the two dimensions always comes first in the pair. The following scenarios are
+     * provided:
+     * <table border=1>
+     *   <tr><th>Name</th><th>Description</th><th>Class</th><th>IsNull</th></tr>
+     *   <tr><td>{@literal >}</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>{@literal >}</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>{@literal >}</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>{@literal >}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>=</td><td>=</td></tr>
+     *   <tr><td>{@literal >}</td><td>=</td><td>{@literal >}</td><td>=</td></tr>
+     *   <tr><td>{@literal >}</td><td>=</td><td>=</td><td>{@literal >}</td></tr>
+     *   <tr><td>=</td><td>{@literal >}</td><td>{@literal >}</td><td>=</td></tr>
+     *   <tr><td>=</td><td>{@literal >}</td><td>=</td><td>{@literal >}</td></tr>
+     *   <tr><td>=</td><td>=</td><td>{@literal >}</td><td>{@literal >}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td><td>=</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>=</td><td>{@literal >}</td></tr>
+     *   <tr><td>{@literal >}</td><td>=</td><td>{@literal >}</td><td>{@literal >}</td></tr>
+     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
+     * </table>
+     * The {@code null} case is checked by {@link #compareNullTest()}. A similar set of checks for equal dimensions is
+     * performed by {@link #compareEqualTest(BaseDimension, BaseDimension)}.
+     *
+     * @return an array of dimension pairs none, of which are equal.
+     * @since 1.0.0
+     */
+    @DataProvider(name = "compareUnequalData")
+    protected Object[][] compareUnequalData()
+    {
+        String bigStr, lilStr;
+
+        if(DEFAULT_NAME.compareTo(DEFAULT_DESCRIPTION) > 0) {
+            bigStr = DEFAULT_NAME;
+            lilStr = DEFAULT_DESCRIPTION;
+        } else {
+            bigStr = DEFAULT_DESCRIPTION;
+            lilStr = DEFAULT_NAME;
+        }
+
+        return new Object[][] {
+                // Diff class
+                {someDimension, new TestDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION)},
+                // Diff name
+                {new BaseDimension(DEFAULT_NAME), new BaseDimension(DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, true), new BaseDimension(DEFAULT_DESCRIPTION, true)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_DESCRIPTION, true)},
+                // Diff dimension
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_NAME)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_NAME, DEFAULT_NAME)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_NAME, true)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_NAME, DEFAULT_NAME, true)},
+                // Diff null
+                {new BaseDimension(DEFAULT_NAME), new BaseDimension(DEFAULT_NAME, true)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true)},
+                // Diff name, description
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_DESCRIPTION, true)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_DESCRIPTION, true)},
+                // Diff name, null
+                {new BaseDimension(DEFAULT_NAME, true), new BaseDimension(DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_DESCRIPTION)},
+                // Diff name, description, null
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_DESCRIPTION)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_DESCRIPTION, true)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION, true), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_NAME)},
+                {new BaseDimension(DEFAULT_NAME, DEFAULT_DESCRIPTION), new BaseDimension(DEFAULT_DESCRIPTION, DEFAULT_NAME, true)}
+        };
+    }
+
+    /**
+     * Checks that dimensions that are not expected to be equal do not compare as equal. The comparison is symmetrical:
+     * neither {@code firstDimension.equals(secondDimension)} nor {@code secondDimension.equals(firstDimension)} may be
+     * true. Similarly {@code dim1.compareTo(dim2) > 0} and {@code dim2.compareTo(dim1) < 0} must both be true as well.
+     * This test is therefore also checking for consistency with {@code equals()}. This method requires the first
+     * parameter to be greater than the second and does not handle {@code null} inputs. {@code null}s are checked by
+     * {@link #compareNullTest()}. Checks for equal dimenisons are handled by {@link
+     * #compareEqualTest(BaseDimension, BaseDimension)}.
+     *
+     * @param dim1 the (strictly) greater dimension to compare.
+     * @param dim2 the (strictly) smaller dimension to compare.
+     * @since 1.0.0
+     */
+    @Test(dataProvider = "compareUnequalData")
+    public void compareUnequalTest(BaseDimension dim1, Dimension dim2)
+    {
+        Assert.assertNotEquals(dim1, dim2);
+        Assert.assertNotEquals(dim2, dim1);
+
+        Assert.assertTrue(dim1.compareTo(dim2) > 0);
+        Assert.assertTrue(dim2.compareTo(dim1) < 0);
     }
 
     /**
@@ -258,14 +419,8 @@ public class BaseDimensionTest
         Assert.assertEquals(someDimension.componentCount(), 1);
     }
 
-    @Test
-    public void equalsTest()
-    {
-        throw new RuntimeException("Test not implemented");
-    }
-
     /**
-     * Checks that two dimensions initialized with the same parameters have the same has code.
+     * Checks that two dimensions initialized with the same parameters have the same hash code.
      *
      * @since 1.0.0
      */
@@ -302,5 +457,41 @@ public class BaseDimensionTest
 
         // Check that it had exactly one item
         Assert.assertFalse(iterator.hasNext());
+    }
+
+    /**
+     * A base dimension type that does not override any of the methods of its parent type. This class is intended to be
+     * test the class-differentiation properties of {@code BaseDimension}'s {@code equals()}, and {@code compareTo()}
+     * methods. Access only to the full superconstructor is provided.
+     *
+     * @author Joseph Fox-Rabinovitz
+     * @version 1.0.0, 04 Sep 2014 - J. Fox-Rabinovitz - Initial coding.
+     * @since 1.0.0
+     */
+    private static class TestBaseDimension extends BaseDimension
+    {
+        /**
+         * The version ID for serialization.
+         *
+         * @serial Increment the least significant three digits when
+         * compatibility is not compromised by a structural change (e.g. adding
+         * a new field with a sensible default value), and the upper digits when
+         * the change makes serialized versions of of the class incompatible
+         * with previous releases.
+         * @since 1.0.0
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Redirects to the superconstructor with the same argument list.
+         *
+         * @param name {@inheritDoc}
+         * @param description {@inheritDoc}
+         * @since 1.0.0
+         */
+        public TestBaseDimension(String name, String description, boolean isNull)
+        {
+            super(name, description, isNull);
+        }
     }
 }
