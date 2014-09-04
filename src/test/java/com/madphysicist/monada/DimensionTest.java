@@ -95,7 +95,7 @@ public class DimensionTest
     /**
      * A dimension that is the same as {@link #oneArgDimension} and {@link #noDescDimension} in most ways, except that
      * it has a different class. The name, description and components are the same. The class difference is implemented
-     * through the private inner type {@link #InnerTestDimension}. This reference is initialized only once by {@link
+     * through the private inner type {@link InnerTestDimension}. This reference is initialized only once by {@link
      * #beforeClass()} because it is immutable.
      *
      * @since 1.0.0
@@ -105,7 +105,7 @@ public class DimensionTest
     /**
      * A dimension that is the same as {@link #twoArgDimension} in most ways, except that it has a different class. The
      * name, description and components are the same. The class difference is implemented through the private inner
-     * type {@link #InnerTestDimension}. This reference is initialized only once by {@link #beforeClass()} because it is
+     * type {@link InnerTestDimension}. This reference is initialized only once by {@link #beforeClass()} because it is
      * immutable.
      *
      * @since 1.0.0
@@ -158,7 +158,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void DimensionOneArgNullTest() throws NullPointerException
+    public void oneArgConstructorNullTest() throws NullPointerException
     {
         new TestDimension(null);
         Assert.fail();
@@ -171,7 +171,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test
-    public void DimensionOneArgTest()
+    public void oneArgConstructorTest()
     {
         Assert.assertSame(oneArgDimension.name(), DEFAULT_NAME);
         Assert.assertNull(oneArgDimension.description());
@@ -185,7 +185,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void DimensionTwoArgNullTest() throws NullPointerException
+    public void twoArgConstructorNullTest() throws NullPointerException
     {
         new TestDimension(null, DEFAULT_DESCRIPTION);
         Assert.fail();
@@ -199,7 +199,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test
-    public void DimensionTwoArgTest()
+    public void twoArgConstructorTest()
     {
         Assert.assertSame(twoArgDimension.name(), DEFAULT_NAME);
         Assert.assertSame(twoArgDimension.description(), DEFAULT_DESCRIPTION);
@@ -266,9 +266,12 @@ public class DimensionTest
      *   <li>The name of the dimensions does not affect component comparison</li>
      *   <li>The description of the dimensions does not affect component comparison</li>
      * </ul>
-     * Additional verification of the {@code compareComponents()} method is provided by {@link
-     * BaseDimensionTest#compareComponentsTest()} and {@link DerivedDimensionTest#compareComponentsTest()}. The latter
-     * in particular is useful because it verifies the comparison with a non-trivial set of dimension components.
+     * Additional verification of the {@code compareComponents()} method is provided by
+     * {@link BaseDimensionTest#compareComponentsEqualTest(Dimension, Dimension)},
+     * {@link BaseDimensionTest#compareComponentsUnequalTest(Dimension, Dimension)},
+     * {@link DerivedDimensionTest#compareComponentsEqualTest(Dimension, Dimension)} and
+     * {@link DerivedDimensionTest#compareComponentsUnequalTest(Dimension, Dimension)}. The latter two in particular are
+     * useful because they verify the comparison with a non-trivial set of dimension components.
      *
      * @param firstDimension the first dimension to compare the dimensions are compared as {@code
      * firstDimension.compareComponents(secondDimension)}.
@@ -300,8 +303,8 @@ public class DimensionTest
     }
 
     /**
-     * Provides data for {@link #compareToEqualTest()} to verify that dimensions that are expected to be equal are in
-     * fact equal. Both identical and non-identical instances are tested.
+     * Provides data for {@link #compareToEqualTest(Dimension, Dimension)} to verify that dimensions that are expected
+     * to be equal are in fact equal. Both identical and non-identical instances are tested.
      *
      * @return an array of equal dimension pairs.
      * @since 1.0.0
@@ -322,12 +325,10 @@ public class DimensionTest
      * Verifies that the {@code compareTo()} method compares equal instances correctly. This method only tests equal
      * dimensions. The test is performed both ways for thoroughness: both {@code dim1.compareTo(dim2) == 0} and {@code
      * dim2.compareTo(dim1) == 0} must be true. This test also double-checks consistency with {@code equals()}. A
-     * similar check for unequal dimensions is done in {@link #compareToUnequalTest()}.
+     * similar check for unequal dimensions is done in {@link #compareToUnequalTest(Dimension, Dimension)}.
      *
      * @param dim1 the first dimension to compare.
      * @param dim2 the second dimension to compare.
-     * @param same a flag indicating whether or not the two dimensions are the same reference. The appropriate assertion
-     * (same or not same) is made to double-check this flag.
      * @since 1.0.0
      */
     @Test(dataProvider = "compareToEqualData")
@@ -340,9 +341,9 @@ public class DimensionTest
     }
 
     /**
-     * Provides data for {@link #compareToUnequalTest()} to verify that dimensions that are expected to be unequal are
-     * in fact unequal. This data provider implements scenarios in which the name, description and class name are
-     * different. The following is a list of the scenarios tested:
+     * Provides data for {@link #compareToUnequalTest(Dimension, Dimension)} to verify that dimensions that are
+     * expected to be unequal are in fact unequal. This data provider implements scenarios in which the name,
+     * description and class name are different. The following is a list of the scenarios tested:
      * <table border="1">
      *   <tr><th>Name</th><th>Description</th><th>Class</th></tr>
      *   <tr><td>{@literal >}</td><td>=</td><td>=</td></tr>
@@ -443,7 +444,7 @@ public class DimensionTest
      * correctly. This method only tests unequal dimensions. The test is performed both ways for thoroughness: both
      * {@code bigDim.compareTo(lilDim) > 0} and {@code lilDim.compareTo(bigDim) < 0} must be true. This test also
      * verifies consistency with {@code equals()}: all comparisons must return {@code false}. A similar check for equal
-     * dimensions is done in {@link #compareToEqualTest()}.
+     * dimensions is done in {@link #compareToEqualTest(Dimension, Dimension)}.
      *
      * @param bigDim the larger of the two dimensions.
      * @param lilDim the smaller of the two dimensions.

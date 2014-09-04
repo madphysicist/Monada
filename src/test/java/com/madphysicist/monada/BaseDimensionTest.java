@@ -241,6 +241,21 @@ public class BaseDimensionTest
         Assert.assertEquals(dim.isNull(), isNull);
     }
 
+    @Test(dataProvider = "compareComponentsEqualData")
+    public void compareComponentsEqualTest(Dimension firstDimension, Dimension secondDimension)
+    {
+        Assert.assertEquals(firstDimension.compareComponents(secondDimension), 0);
+        if(firstDimension != secondDimension)
+            Assert.assertEquals(secondDimension.compareComponents(firstDimension), 0);
+    }
+
+    @Test(dataProvider = "compareComponentsUnequalData")
+    public void compareComponentsUnequalTest(Dimension firstDimension, Dimension secondDimension)
+    {
+        Assert.assertTrue(firstDimension.compareComponents(secondDimension) > 0);
+        Assert.assertTrue(secondDimension.compareComponents(firstDimension) < 0);
+    }
+
     @Test
     public void compareToTest()
     {
