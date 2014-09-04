@@ -219,7 +219,7 @@ public class DimensionComponentTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void LinearConstructorNullTest() throws NullPointerException
+    public void linearConstructorNullTest() throws NullPointerException
     {
         new DimensionComponent(null);
         Assert.fail();
@@ -233,7 +233,7 @@ public class DimensionComponentTest
      * @since 1.0.0
      */
     @Test
-    public void LinearConstructorTest()
+    public void linearConstructorTest()
     {
         Assert.assertEquals(linearComponent.exponent(), 1.0f);
         Assert.assertSame(linearComponent.dimension(), greaterDimension);
@@ -247,7 +247,7 @@ public class DimensionComponentTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void FullConstructorNullTest() throws NullPointerException
+    public void fullConstructorNullTest() throws NullPointerException
     {
         new DimensionComponent(null, exponent);
         Assert.fail();
@@ -261,7 +261,7 @@ public class DimensionComponentTest
      * @since 1.0.0
      */
     @Test
-    public void FullConstructorTest()
+    public void fullConstructorTest()
     {
         Assert.assertEquals(component.exponent(), exponent);
         Assert.assertSame(component.dimension(), dimension);

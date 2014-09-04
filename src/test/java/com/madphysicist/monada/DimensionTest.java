@@ -158,7 +158,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void DimensionOneArgNullTest() throws NullPointerException
+    public void oneArgConstructorNullTest() throws NullPointerException
     {
         new TestDimension(null);
         Assert.fail();
@@ -171,7 +171,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test
-    public void DimensionOneArgTest()
+    public void oneArgConstructorTest()
     {
         Assert.assertSame(oneArgDimension.name(), DEFAULT_NAME);
         Assert.assertNull(oneArgDimension.description());
@@ -185,7 +185,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test(expectedExceptions = NullPointerException.class)
-    public void DimensionTwoArgNullTest() throws NullPointerException
+    public void twoArgConstructorNullTest() throws NullPointerException
     {
         new TestDimension(null, DEFAULT_DESCRIPTION);
         Assert.fail();
@@ -199,7 +199,7 @@ public class DimensionTest
      * @since 1.0.0
      */
     @Test
-    public void DimensionTwoArgTest()
+    public void twoArgConstructorTest()
     {
         Assert.assertSame(twoArgDimension.name(), DEFAULT_NAME);
         Assert.assertSame(twoArgDimension.description(), DEFAULT_DESCRIPTION);
@@ -266,9 +266,12 @@ public class DimensionTest
      *   <li>The name of the dimensions does not affect component comparison</li>
      *   <li>The description of the dimensions does not affect component comparison</li>
      * </ul>
-     * Additional verification of the {@code compareComponents()} method is provided by {@link
-     * BaseDimensionTest#compareComponentsTest()} and {@link DerivedDimensionTest#compareComponentsTest()}. The latter
-     * in particular is useful because it verifies the comparison with a non-trivial set of dimension components.
+     * Additional verification of the {@code compareComponents()} method is provided by
+     * {@link BaseDimensionTest#compareComponentsEqualTest(Dimension, Dimension)},
+     * {@link BaseDimensionTest#compareComponentsUnequalTest(Dimension, Dimension)},
+     * {@link DerivedDimensionTest#compareComponentsEqualTest(Dimension, Dimension)} and
+     * {@link DerivedDimensionTest#compareComponentsUnequalTest(Dimension, Dimension)}. The latter two in particular are
+     * useful because they verify the comparison with a non-trivial set of dimension components.
      *
      * @param firstDimension the first dimension to compare the dimensions are compared as {@code
      * firstDimension.compareComponents(secondDimension)}.
@@ -338,7 +341,7 @@ public class DimensionTest
     }
 
     /**
-     * Provides data for {@link #compareToUnequalTest(Dimension, Dimension))} to verify that dimensions that are
+     * Provides data for {@link #compareToUnequalTest(Dimension, Dimension)} to verify that dimensions that are
      * expected to be unequal are in fact unequal. This data provider implements scenarios in which the name,
      * description and class name are different. The following is a list of the scenarios tested:
      * <table border="1">
