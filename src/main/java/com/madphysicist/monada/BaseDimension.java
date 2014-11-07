@@ -227,9 +227,10 @@ public class BaseDimension extends Dimension
      * @see #isNull()
      * @since 1.0.0
      */
-    @Override public boolean equals(Object o) // true result guarantees that o is a BaseDimension
+    @Override public boolean equals(Object o)
     {
         if(super.equals(o)) {
+            // true result guarantees that o is a BaseDimension
             BaseDimension dim = (BaseDimension)o;
             return this.isNull == dim.isNull;
         }

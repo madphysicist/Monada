@@ -195,10 +195,13 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
      * Compares this dimension to another one by name and by description. by description and finally by class name. The
      * class name comparison ensures that a dimension of a different type will not be equal to this one. This comparison
      * is therefore consistent with {@code equals()}. This method should be overridden by extending classes to preserve
-     * its consistency with {@code equals()} by including comparisons of any relevant properties.
+     * its consistency with {@code equals()} by including comparisons of any relevant properties. To preserve the
+     * ability to compare symmetrically against different subclasses, overriding methods should always call {@code
+     * super.compareTo(o)} before proceeding with other comparisons.
      *
      * @param o {@inheritDoc}
-     * @return {@inheritDoc}
+     * @return {@inheritDoc}. A return value of zero guarantees that the other dimension is of the same type as this
+     * one.
      * @since 1.0.0
      */
     @Override public int compareTo(Dimension o)
@@ -233,7 +236,8 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
      * preserved by the {@code #compareTo(Dimension)} method of any extending class.
      *
      * @param o {@inheritDoc}
-     * @return {@inheritDoc}
+     * @return {@inheritDoc}. A return value of {@code true} guarantees that the other dimension is of the same type as
+     * this one.
      * @since 1.0.0
      */
     @Override public boolean equals(Object o)
@@ -248,14 +252,15 @@ public abstract class Dimension implements Serializable, Comparable<Dimension>, 
     /**
      * {@inheritDoc}
      * This method only computes the hash code for this abstract base class. Extending classes should override this
-     * method to be consistent with equals. The hash code depends the name and description of this dimension.
+     * method to be consistent with equals. The hash code depends the name, description and class of this dimension.
      *
      * @since 1.0.0
      */
     @Override public int hashCode()
     {
         int hashCode = HashUtilities.hashCode(name);
-        return HashUtilities.hashCode(hashCode, description);
+        hashCode = HashUtilities.hashCode(hashCode, description);
+        return HashUtilities.hashCode(hashCode, getClass().getName());
     }
 
     /**

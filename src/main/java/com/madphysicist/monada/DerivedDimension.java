@@ -162,7 +162,7 @@ public class DerivedDimension extends Dimension
     }
 
     /**
-     * Compares this dimension to another one by its components, then by its base properties. This comparison is
+     * Compares this dimension to another one by its base properties, then by its components. This comparison is
      * consistent with {@code equals()}.
      *
      * @param o {@inheritDoc}
@@ -171,16 +171,19 @@ public class DerivedDimension extends Dimension
      */
     @Override public int compareTo(Dimension o)
     {
-        // Compare components
-        int comp = compareComponents(o);
+        // Compare base properties
+        int comp = super.compareTo(o);
         if(comp != 0)
             return comp;
 
-        // If components truly identical, compare base properties
-        return super.compareTo(o);
+        // Compare components
+        return compareComponents(o);
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
      * @since 1.0.0
      */
     @Override public int componentCount()
@@ -213,7 +216,7 @@ public class DerivedDimension extends Dimension
     @Override public boolean equals(Object o)
     {
         if(super.equals(o)) // true result guarantees that o is a DerivedDimension
-            return this.compareComponents((Dimension)o) == 0;
+            return this.compareComponents((DerivedDimension)o) == 0;
         return false;
     }
 

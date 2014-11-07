@@ -37,12 +37,14 @@ import org.testng.annotations.BeforeClass;
 /**
  * Tests each of the methods of {@link BaseDimension} except {@code toString()}. The string representation is provided
  * for debugging and is not guaranteed to match anything. The trivial getters ({@code name()}, {@code description()},
- * and {@code isNull()}) are tested along with the constructors.
+ * and {@code isNull()}) are tested along with the constructors. This test requires {@link DimensionTest} to have run
+ * successfully.
  *
  * @author Joseph Fox-Rabinovitz
  * @version 1.0.0, 30 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
  * @since 1.0
  */
+@Test(groups = "BaseDimensionTest", dependsOnGroups = "DimensionTest")
 public class BaseDimensionTest
 {
     /**
@@ -242,6 +244,43 @@ public class BaseDimensionTest
     }
 
     /**
+     * This test only checks that the class does not affect component comparison. The other properties are verified by
+     * {@link DimensionTest#compareComponentsTest(Dimension, Dimension)} since the {@code compareComponents()} method is
+     * not overridden in {@code BaseDimension}. The actual test compares a {@code BaseDimension} and a {@code
+     * DerivedDimension} that is linear in that base dimension and has no other components.
+     *
+     * @since 1.0.0
+     */
+    @Test
+    public void compareComponentsEqualTest()
+    {
+        DerivedDimension otherDimension = new DerivedDimension("AnotherDimension", someDimension);
+
+        Assert.assertNotEquals(someDimension, otherDimension);
+        Assert.assertNotEquals(otherDimension, someDimension);
+
+        Assert.assertEquals(someDimension.compareComponents(otherDimension), 0);
+        Assert.assertEquals(otherDimension.compareComponents(someDimension), 0);
+
+        // Check self just for caution
+        Assert.assertEquals(someDimension.compareComponents(someDimension), 0);
+    }
+
+    /**
+     * The {@code null} case is verified by {@link DimensionTest#compareComponentsNullTest()} because the {@code
+     * compareComponents()} method is never overridden.
+     *
+     * @param dim1
+     * @param dim2
+     */
+    @Test(dataProvider = "compareComponentsUnequalData")
+    public void compareComponentsUnequalTest(BaseDimension dim1, Dimension dim2)
+    {
+        Assert.assertTrue(dim1.compareComponents(dim2) > 0);
+        Assert.assertTrue(dim2.compareComponents(dim1) < 0);
+    }
+
+    /**
      * Checks that a dimension is never equal to {@code null} and that comparison against {@code null} fails. The
      * expected failure is a {@code NullPointerException}.
      *
@@ -288,7 +327,7 @@ public class BaseDimensionTest
      * dim1.compareTo(dim2) == 0} and {@code dim2.compareTo(dim1) == 0} must be true. Likewise, both {@code
      * dim1.equals(dim2)} and {@code dim2.equals(dim1)} must be true. This test is therefore also checking for
      * consistency with {@code equals()}. Similar checks for unequal dimensions are done in {@link
-     * #compareUnequalTest(BaseDimension, Dimension)} and {@link #compareNullTest()}.
+     * #compareUnequalTest(Dimension, Dimension)} and {@link #compareNullTest()}.
      *
      * @param dim1 the first dimension to compare.
      * @param dim2 the second dimension to compare.
@@ -304,36 +343,17 @@ public class BaseDimensionTest
     }
 
     /**
-     * Provides data to {@link #compareUnequalTest(BaseDimension, Dimension)} to verify that unequal dimensions are
-     * marked as such. The greater of the two dimensions always comes first in the pair. The following scenarios are
+     * Provides data to {@link #compareUnequalTest(Dimension, Dimension)} to verify that unequal dimensions are marked
+     * as such. The greater of the two dimensions always comes first in the pair. The following comparisons are
      * provided:
-     * <table border=1>
-     *   <tr><th>Name</th><th>Description</th><th>Class</th><th>IsNull</th></tr>
-     *   <tr><td>{@literal >}</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>{@literal >}</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>{@literal >}</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>{@literal >}</td></tr>
-     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>=</td><td>=</td></tr>
-     *   <tr><td>{@literal >}</td><td>=</td><td>{@literal >}</td><td>=</td></tr>
-     *   <tr><td>{@literal >}</td><td>=</td><td>=</td><td>{@literal >}</td></tr>
-     *   <tr><td>=</td><td>{@literal >}</td><td>{@literal >}</td><td>=</td></tr>
-     *   <tr><td>=</td><td>{@literal >}</td><td>=</td><td>{@literal >}</td></tr>
-     *   <tr><td>=</td><td>=</td><td>{@literal >}</td><td>{@literal >}</td></tr>
-     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td><td>=</td></tr>
-     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>=</td><td>{@literal >}</td></tr>
-     *   <tr><td>{@literal >}</td><td>=</td><td>{@literal >}</td><td>{@literal >}</td></tr>
-     *   <tr><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td><td>{@literal >}</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     *   <tr><td>=</td><td>=</td><td>=</td><td>=</td></tr>
-     * </table>
+     * <ul>
+     *   <li>Some instance of the same class, but with unequal properties.</li>
+     *   <li>Instance of an extending class with all properties the same.</li>
+     *   <li>Instances of an extending class with some properties different.</li>
+     *   <li>Instance of {@code DerivedDimension} linear in the test base dimension.</li>
+     *   <li>Instance of {@code DerivedDimension} linear in the test base dimension and other dimensions.</li>
+     *   <li>Instance of {@code DerivedDimension} non-linear in the test base dimension.</li>
+     * </ul>
      * The {@code null} case is checked by {@link #compareNullTest()}. A similar set of checks for equal dimensions is
      * performed by {@link #compareEqualTest(BaseDimension, BaseDimension)}.
      *
@@ -391,7 +411,7 @@ public class BaseDimensionTest
      * true. Similarly {@code dim1.compareTo(dim2) > 0} and {@code dim2.compareTo(dim1) < 0} must both be true as well.
      * This test is therefore also checking for consistency with {@code equals()}. This method requires the first
      * parameter to be greater than the second and does not handle {@code null} inputs. {@code null}s are checked by
-     * {@link #compareNullTest()}. Checks for equal dimenisons are handled by {@link
+     * {@link #compareNullTest()}. Checks for equal dimensions are handled by {@link
      * #compareEqualTest(BaseDimension, BaseDimension)}.
      *
      * @param dim1 the (strictly) greater dimension to compare.
@@ -399,7 +419,7 @@ public class BaseDimensionTest
      * @since 1.0.0
      */
     @Test(dataProvider = "compareUnequalData")
-    public void compareUnequalTest(BaseDimension dim1, Dimension dim2)
+    public void compareUnequalTest(Dimension dim1, Dimension dim2)
     {
         Assert.assertNotEquals(dim1, dim2);
         Assert.assertNotEquals(dim2, dim1);

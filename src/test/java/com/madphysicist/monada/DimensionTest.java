@@ -48,6 +48,7 @@ import org.testng.annotations.BeforeClass;
  * @version 1.0.0, 30 Aug 2014 - J. Fox-Rabinovitz - Initial coding.
  * @since 1.0
  */
+@Test(groups = "DimensionTest")
 public class DimensionTest
 {
     /**
@@ -267,11 +268,11 @@ public class DimensionTest
      *   <li>The description of the dimensions does not affect component comparison</li>
      * </ul>
      * Additional verification of the {@code compareComponents()} method is provided by
-     * {@link BaseDimensionTest#compareComponentsEqualTest(Dimension, Dimension)},
-     * {@link BaseDimensionTest#compareComponentsUnequalTest(Dimension, Dimension)},
-     * {@link DerivedDimensionTest#compareComponentsEqualTest(Dimension, Dimension)} and
-     * {@link DerivedDimensionTest#compareComponentsUnequalTest(Dimension, Dimension)}. The latter two in particular are
-     * useful because they verify the comparison with a non-trivial set of dimension components.
+     * {@link BaseDimensionTest#compareComponentsEqualTest(BaseDimension, Dimension)},
+     * {@link BaseDimensionTest#compareComponentsUnequalTest(BaseDimension, Dimension)},
+     * {@link DerivedDimensionTest#compareComponentsEqualTest(DerivedDimension, Dimension)} and
+     * {@link DerivedDimensionTest#compareComponentsUnequalTest(DerivedDimension, Dimension)}. The last one is
+     * particularly useful because it verifies the comparison with a non-trivial set of dimension components.
      *
      * @param firstDimension the first dimension to compare the dimensions are compared as {@code
      * firstDimension.compareComponents(secondDimension)}.
